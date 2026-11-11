@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { formatPrice, pricePerPerson } from '../utils/format'
 import StatusBadge from './StatusBadge'
+import { useComparator } from '../context/useComparator.js'
 
 export default function AccommodationCard({
   accommodation,
@@ -9,7 +10,9 @@ export default function AccommodationCard({
   onStatusChange,
   onOpenAirbnb,
 }) {
-  const ppp = pricePerPerson(accommodation.priceTotal, accommodation.guestsForPrice, accommodation.currency)
+  const { toggle, isSelected, canAdd } = useComparator()
+  const selected = isSelected(accommodation.id)
+  const ppp = pricePerPerson(accommodation.priceTotal, accommodation.guestsForPrice)
 
   const features = []
   if (accommodation.pool) features.push('Piscina')
@@ -67,7 +70,12 @@ export default function AccommodationCard({
         <button
           type="button"
           className="accommodation-card-action view"
-          onClick={() => onOpenAirbnb && onOpenAirbnb(accommodation.airbnbUrl)}
+          onClick={() => {
+            const url = accommodation.airbnbUrl
+            if (!url) return
+            if (onOpenAirbnb) onOpenAirbnb(url)
+            else window.open(url, '_blank', 'noopener')
+          }}
           title="Abrir en Airbnb"
         >
           Abrir Airbnb ↗
@@ -82,6 +90,18 @@ export default function AccommodationCard({
           <option value="favorite">❤️ Favorita</option>
           <option value="discarded">❌ Descartada</option>
         </select>
+        <button
+          type="button"
+          className={`accommodation-card-action compare ${selected ? 'active' : ''}`}
+          onClick={() => {
+            if (!canAdd(accommodation.id)) return
+            toggle(accommodation.id)
+          }}
+          disabled={!selected && !canAdd(accommodation.id)}
+          title={selected ? 'Quitar del comparador' : 'Agregar al comparador'}
+        >
+          {selected ? '✔ Comparando' : 'Comparar'}
+        </button>
       </div>
     </article>
   )

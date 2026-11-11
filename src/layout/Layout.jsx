@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/pendientes', label: 'Pendientes' },
   { to: '/descartados', label: 'Descartadas' },
   { to: '/mapa', label: 'Mapa' },
+  { to: '/comparador', label: 'Comparador' },
   { to: '/admin', label: 'Administrar' },
 ]
 

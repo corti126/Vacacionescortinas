@@ -1,0 +1,230 @@
+/* Página de comparador */
+.cmp-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.cmp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cmp-header h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.cmp-subtitle {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin: 4px 0 0;
+}
+
+.cmp-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cmp-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 20px;
+}
+
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+  background: var(--surface);
+}
+
+.cmp-table th,
+.cmp-table td {
+  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  vertical-align: top;
+  text-align: left;
+}
+
+.cmp-row-label {
+  font-weight: 700;
+  color: var(--text-h);
+  background: var(--surface-hover);
+  min-width: 170px;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.cmp-accom-cell {
+  min-width: 220px;
+}
+
+.cmp-accom-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.cmp-accom-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.cmp-accom-name {
+  font-weight: 700;
+  color: var(--text-h);
+  font-size: 15px;
+}
+
+.cmp-accom-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cmp-accom-name a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.cmp-accom-city {
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.cmp-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text-soft);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.cmp-remove:hover {
+  background: rgba(198, 40, 40, 0.15);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.cmp-cell-photo {
+  width: 96px;
+}
+
+.cmp-cell-thumb {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.cmp-cell-name {
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.cmp-cell-city {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.cmp-cell-price {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.cmp-cell-rating {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.cmp-rating-1, .cmp-rating-2, .cmp-rating-3 { color: var(--danger); }
+.cmp-rating-4, .cmp-rating-5 { color: var(--warning); }
+.cmp-rating-6, .cmp-rating-7 { color: var(--success); }
+.cmp-rating-8, .cmp-rating-9 { color: var(--success); }
+.cmp-rating-10 { color: var(--success); }
+
+.cmp-cell-muted {
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+.cmp-cell-bool {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cmp-cell-notes {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.cmp-cell-airbnb {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.cmp-hint {
+  font-size: 14px;
+  color: var(--warning);
+  text-align: center;
+}
+
+.cmp-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--text-soft);
+}
+
+.cmp-empty p {
+  margin: 0 0 8px;
+}
+
+.btn-clear {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text-h);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-clear:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(198, 40, 40, 0.1);
+}
+
+@media (max-width: 640px) {
+  .cmp-page { padding: 16px 16px; }
+  .cmp-header { flex-direction: column; align-items: flex-start; }
+  .cmp-header h1 { font-size: 22px; }
+  .cmp-table th, .cmp-table td { padding: 10px 12px; }
+  .cmp-accom-thumb { width: 44px; height: 44px; }
+}
