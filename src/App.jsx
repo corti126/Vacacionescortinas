@@ -6,6 +6,7 @@ import CitiesList from './pages/CitiesList'
 import CityDetail from './pages/CityDetail'
 import Mapa from './pages/Mapa'
 import StatusList from './pages/StatusList'
+import AccommodationsList from './pages/AccommodationsList'
 import CityFormPage from './pages/CityFormPage'
 import AccommodationFormPage from './pages/AccommodationFormPage'
 import Admin from './pages/Admin'
@@ -28,6 +29,7 @@ function App() {
             <Route path="/favoritos" element={<StatusList status="favorite" />} />
             <Route path="/pendientes" element={<StatusList status="pending" />} />
             <Route path="/descartados" element={<StatusList status="discarded" />} />
+            <Route path="/alojamientos" element={<AccommodationsList />} />
             <Route path="/admin" element={<Admin />} />
             {/* Rutas pendientes de fases: /favoritos, /pendientes, /descartados, /mapa, /alojamientos/:id */}
           </Routes>

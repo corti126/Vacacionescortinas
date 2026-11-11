@@ -5,9 +5,10 @@ import {
   observeAccommodations,
   observeAccommodationStatuses,
   observeCities,
+  setAccommodationStatus,
+  ACCOMMODATION_STATUS,
 } from '../services/firestore'
 import AccommodationCard from '../components/AccommodationCard'
-import { ACCOMMODATION_STATUS } from '../services/firestore'
 import { statusLabel } from '../utils/format'
 import '../styles/lists.css'
 
@@ -101,6 +102,9 @@ export default function StatusList() {
                 key={a.id}
                 accommodation={{ ...a, cityName: city ? city.name : '' }}
                 status={st}
+                onStatusChange={(nextStatus) =>
+                  setAccommodationStatus(a.id, nextStatus)
+                }
               />
             )
           })}

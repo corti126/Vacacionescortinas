@@ -433,3 +433,119 @@
   border-color: var(--accent-border);
   color: var(--accent);
 }
+
+/* Filtros y ordenamiento */
+.filters-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 24px;
+}
+
+.filters-panel-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.filters-title {
+  font-size: 18px;
+  margin: 0 0 16px;
+  color: var(--text-h);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.filter-field input,
+.filter-field select {
+  padding: 8px 10px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filters-sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.filters-sort label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+  white-space: nowrap;
+}
+
+.filters-sort select {
+  padding: 8px 10px;
+  font-size: 14px;
+  min-width: 220px;
+}
+
+.filters-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-clear {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text-h);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-clear:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.btn-clear svg {
+  margin-right: 6px;
+}
+
+/* Selector de estado en tarjetas */
+.accommodation-card-action.status select {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.accommodation-card-action.status select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

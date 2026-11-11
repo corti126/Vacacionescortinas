@@ -72,20 +72,17 @@ export default function AccommodationCard({
         >
           Abrir Airbnb ↗
         </button>
-        <button
-          type="button"
+        <select
           className="accommodation-card-action status"
-          onClick={() => onStatusChange && onStatusChange()}
-          title="Cambiar estado familiar"
+          value={status}
+          onChange={(e) => onStatusChange && onStatusChange(e.target.value)}
+          aria-label="Estado familiar del alojamiento"
         >
-          {statusLabel(status)}
-        </button>
+          <option value="pending">⏳ Pendiente</option>
+          <option value="favorite">❤️ Favorita</option>
+          <option value="discarded">❌ Descartada</option>
+        </select>
       </div>
     </article>
   )
-}
-
-function statusLabel(status) {
-  const labels = { pending: 'Pendiente', favorite: 'Favorita', discarded: 'Descartada' }
-  return labels[status] || 'Pendiente'
 }

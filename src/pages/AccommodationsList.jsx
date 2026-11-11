@@ -1,0 +1,169 @@
+/* Listado global de alojamientos con filtros y ordenamiento combinables */
+import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import {
+  observeAccommodations,
+  observeAccommodationStatuses,
+  observeCities,
+  setAccommodationStatus,
+  ACCOMMODATION_STATUS,
+} from '../services/firestore'
+import FiltersPanel from '../components/FiltersPanel'
+import {
+  EMPTY_FILTERS,
+  SORT_OPTIONS,
+} from '../components/filtersConstants'
+import AccommodationList from '../components/AccommodationList'
+import '../styles/lists.css'
+
+export default function AccommodationsList() {
+  const [cities, setCities] = useState([])
+  const [accommodations, setAccommodations] = useState([])
+  const [statuses, setStatuses] = useState([])
+  const [filters, setFilters] = useState(EMPTY_FILTERS)
+  const [sort, setSort] = useState('price-asc')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let ready = 0
+    const markReady = () => {
+      ready += 1
+      if (ready >= 3) setLoading(false)
+    }
+    const unsubCities = observeCities((list) => {
+      setCities(list)
+      markReady()
+    })
+    const unsubAccommodations = observeAccommodations((list) => {
+      setAccommodations(list)
+      markReady()
+    })
+    const unsubStatuses = observeAccommodationStatuses((list) => {
+      setStatuses(list)
+      markReady()
+    })
+    return () => {
+      unsubCities()
+      unsubAccommodations()
+      unsubStatuses()
+    }
+  }, [])
+
+  const statusesById = useMemo(() => {
+    const m = {}
+    for (const s of statuses) m[s.id] = s
+    return m
+  }, [statuses])
+
+  const citiesById = useMemo(() => {
+    const m = {}
+    for (const c of cities) m[c.id] = c
+    return m
+  }, [cities])
+
+  const filtered = useMemo(() => {
+    return accommodations.filter((a) => {
+      const st = statusesById[a.id]?.status || ACCOMMODATION_STATUS.PENDING
+      if (filters.cityId && a.cityId !== filters.cityId) return false
+      if (filters.maxPrice && Number(a.priceTotal) > Number(filters.maxPrice)) return false
+      if (
+        filters.maxDistance &&
+        Number(a.distanceToBeach) > Number(filters.maxDistance)
+      )
+        return false
+      if (filters.minCapacity && Number(a.capacity) < Number(filters.minCapacity))
+        return false
+      if (filters.minBedrooms && Number(a.bedrooms) < Number(filters.minBedrooms))
+        return false
+      if (filters.pool && a.pool !== true) return false
+      if (filters.garage && a.garage !== true) return false
+      if (filters.minRating && Number(a.myRating) < Number(filters.minRating))
+        return false
+      if (filters.status && st !== filters.status) return false
+      return true
+    })
+  }, [accommodations, statusesById, filters])
+
+  const sorted = useMemo(() => {
+    const arr = [...filtered]
+    switch (sort) {
+      case 'price-asc':
+        return arr.sort((a, b) => Number(a.priceTotal) - Number(b.priceTotal))
+      case 'price-desc':
+        return arr.sort((a, b) => Number(b.priceTotal) - Number(a.priceTotal))
+      case 'distance-asc':
+        return arr.sort((a, b) => Number(a.distanceToBeach) - Number(b.distanceToBeach))
+      case 'rating-desc':
+        return arr.sort(
+          (a, b) => Number(b.myRating || -1) - Number(a.myRating || -1),
+        )
+      case 'rating-asc':
+        return arr.sort(
+          (a, b) => Number(a.myRating || 11) - Number(b.myRating || 11),
+        )
+      default:
+        return arr
+    }
+  }, [filtered, sort])
+
+  if (loading) {
+    return (
+      <div className="list-page">
+        <div className="list-header"><h1>Alojamientos</h1></div>
+        <div className="list-empty">Cargando…</div>
+      </div>
+    )
+  }
+
+  const sortLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label || sort
+
+  return (
+    <div className="list-page">
+      <div className="list-header">
+        <h1>Alojamientos</h1>
+        <Link to="/ciudades" className="btn-secondary-link">
+          ← Volver a destinos
+        </Link>
+      </div>
+
+      <FiltersPanel
+        filters={filters}
+        onChangeFilters={setFilters}
+        sort={sort}
+        onChangeSort={setSort}
+        cities={cities}
+      />
+
+      <div className="results-summary">
+        {sorted.length} alojamiento{sorted.length !== 1 ? 's' : ''}
+        {' · '}
+        ordenado por: {sortLabel}
+      </div>
+
+      {sorted.length === 0 ? (
+        <div className="list-empty">
+          <p>No hay alojamientos que coincidan con los filtros seleccionados.</p>
+          <button
+            type="button"
+            className="btn-primary-map"
+            onClick={() => {
+              setFilters(EMPTY_FILTERS)
+              setSort('price-asc')
+            }}
+          >
+            Limpiar filtros
+          </button>
+        </div>
+      ) : (
+        <AccommodationList
+          accommodations={sorted}
+          statusesById={statusesById}
+          citiesById={citiesById}
+          onStatusChange={(accommodationId, nextStatus) =>
+            setAccommodationStatus(accommodationId, nextStatus)
+          }
+        />
+      )}
+    </div>
+  )
+}
