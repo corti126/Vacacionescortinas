@@ -1,0 +1,247 @@
+/* Página de inicio */
+.home {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-hero {
+  position: relative;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 0;
+  overflow: hidden;
+}
+
+.home-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.home-hero-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--accent);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-hero h1 {
+  font-size: 44px;
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.home-subtitle {
+  font-size: 18px;
+  color: var(--text-soft);
+  margin: 0 0 32px;
+}
+
+.home-stats {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.stat-value.favorite { color: var(--success); }
+.stat-value.pending { color: var(--warning); }
+.stat-value.discarded { color: var(--danger); }
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .home-hero h1 { font-size: 30px; }
+  .home-stats { gap: 12px; }
+  .stat { padding: 10px 14px; }
+  .stat-value { font-size: 22px; }
+}
+
+/* Accesos rápidos */
+.home-quick-access {
+  padding: 40px 0;
+  background: var(--bg);
+}
+
+.home-quick-access .container {
+  text-align: center;
+}
+
+.home-quick-access h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.quick-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+
+.quick-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+}
+
+.quick-label {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-h);
+}
+
+.quick-count {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Destinos */
+.home-cities {
+  padding: 40px 0;
+}
+
+.home-cities .container {
+  max-width: 1100px;
+}
+
+.home-cities h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.section-intro {
+  color: var(--text-soft);
+  margin-bottom: 28px;
+  font-size: 15px;
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.city-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.city-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent-border);
+}
+
+.city-image {
+  height: 160px;
+  overflow: hidden;
+  background: var(--surface-hover);
+}
+
+.city-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.city-body {
+  padding: 16px;
+}
+
+.city-body h3 {
+  font-size: 19px;
+  margin: 0 0 6px;
+  color: var(--text-h);
+}
+
+.city-region {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.city-desc {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin: 0 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.city-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-soft);
+}
+
+@media (max-width: 640px) {
+  .city-grid {
+    grid-template-columns: 1fr;
+  }
+  .home-hero { padding: 40px 0; }
+}
