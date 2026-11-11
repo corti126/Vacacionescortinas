@@ -1,0 +1,435 @@
+/* Componentes: tarjetas, badges, formularios de imagen */
+
+/* StatusBadge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ImageInput */
+.image-input {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.image-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-input-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.image-input-label .required {
+  color: var(--danger);
+}
+
+.image-input-field {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.image-input-field.error {
+  border-color: var(--danger);
+  background: rgba(198, 40, 40, 0.05);
+}
+
+.image-input-error {
+  font-size: 12px;
+  color: var(--danger);
+  margin-top: 4px;
+}
+
+.image-input-hint {
+  font-size: 12px;
+  color: var(--text-soft);
+  font-style: italic;
+}
+
+.image-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.image-item-field {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.image-item-field.error {
+  border-color: var(--danger);
+  background: rgba(198, 40, 40, 0.05);
+}
+
+.image-item-error {
+  font-size: 11px;
+  color: var(--danger);
+  margin-left: 6px;
+}
+
+.image-item-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  background: var(--surface-hover);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.image-item-remove:hover {
+  background: rgba(198, 40, 40, 0.15);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.image-item-remove:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.image-add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-h);
+  background: var(--surface-hover);
+  width: fit-content;
+}
+
+.image-add-button:hover:not(:disabled) {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.image-add-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.image-preview {
+  margin-top: 8px;
+}
+
+.image-preview-thumb {
+  width: 100%;
+  max-width: 320px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+}
+
+/* CityCard */
+.city-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+
+.city-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent-border);
+}
+
+.city-card-image {
+  height: 170px;
+  overflow: hidden;
+  background: var(--surface-hover);
+}
+
+.city-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.city-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.city-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.city-card-name {
+  font-size: 18px;
+  margin: 0;
+  color: var(--text-h);
+}
+
+.city-card-name:hover {
+  color: var(--accent);
+}
+
+.city-card-region {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.city-card-desc {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.city-card-meta {
+  margin-top: auto;
+}
+
+.city-card-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.city-card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--surface-hover);
+  border-top: 1px solid var(--border);
+}
+
+.city-card-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-h);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.city-card-action-btn.edit:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.city-card-action-btn.delete:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(198, 40, 40, 0.1);
+}
+
+/* AccommodationCard */
+.accommodation-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+
+.accommodation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent-border);
+}
+
+.accommodation-card-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--surface-hover);
+}
+
+.accommodation-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.accommodation-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.accommodation-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.accommodation-card-name {
+  font-size: 17px;
+  margin: 0;
+  color: var(--text-h);
+  line-height: 130%;
+}
+
+.accommodation-card-name:hover {
+  color: var(--accent);
+}
+
+.accommodation-card-location {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0;
+}
+
+.accommodation-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+}
+
+.accommodation-card-price-total {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.accommodation-card-price-per {
+  font-size: 14px;
+  color: var(--text-soft);
+  font-weight: 500;
+}
+
+.accommodation-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+
+.meta-item {
+  font-size: 13px;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta-item.rating {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.accommodation-card-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+.feature-tag {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+.accommodation-card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface-hover);
+  border-top: 1px solid var(--border);
+}
+
+.accommodation-card-action {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-h);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.accommodation-card-action.view {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+
+.accommodation-card-action.view:hover {
+  background: rgba(46, 125, 50, 0.2);
+  border-color: var(--accent);
+}
+
+.accommodation-card-action.status {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.accommodation-card-action.status:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+}

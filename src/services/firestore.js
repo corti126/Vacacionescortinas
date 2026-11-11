@@ -27,6 +27,11 @@ export const ACCOMMODATION_STATUS = {
 
 /* ------------------------- Ciudades ------------------------- */
 
+export async function getCity(id) {
+  const s = await getDoc(doc(db, CITIES_COLLECTION, id))
+  return s.exists() ? { id: s.id, ...s.data() } : null
+}
+
 export function observeCities(callback) {
   const q = query(collection(db, CITIES_COLLECTION), orderBy('name', 'asc'))
   return onSnapshot(q, (snap) => callback(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
@@ -53,9 +58,28 @@ export async function deleteCity(id) {
 
 /* ------------------------- Alojamientos ------------------------- */
 
+export async function getAccommodation(id) {
+  const s = await getDoc(doc(db, ACCOMMODATIONS_COLLECTION, id))
+  return s.exists() ? { id: s.id, ...s.data() } : null
+}
+
 export function observeAccommodations(callback) {
   const q = query(collection(db, ACCOMMODATIONS_COLLECTION), orderBy('createdAt', 'desc'))
   return onSnapshot(q, (snap) => callback(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
+}
+
+export function observeAccommodationsByCity(cityId, callback) {
+  const q = query(
+    collection(db, ACCOMMODATIONS_COLLECTION),
+    orderBy('createdAt', 'desc'),
+  )
+  return onSnapshot(q, (snap) =>
+    callback(
+      snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .filter((a) => a.cityId === cityId),
+    ),
+  )
 }
 
 export async function createAccommodation(accommodation) {

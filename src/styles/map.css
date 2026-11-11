@@ -1,0 +1,95 @@
+/* Página de mapa */
+.map-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.map-header {
+  margin-bottom: 16px;
+}
+
+.map-header h1 {
+  font-size: 28px;
+  margin: 0 0 6px;
+}
+
+.map-subtitle {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin: 0;
+}
+
+.map-container {
+  height: 560px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Forzar contenedor del mapa a 100% (leaflet lo necesita) */
+.map-container .leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.map-popup {
+  min-width: 220px;
+}
+
+.map-popup-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.map-popup h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+  color: var(--text-h);
+}
+
+.map-popup-region {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin: 0 0 6px;
+}
+
+.map-popup-count {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0;
+}
+
+.map-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--text-soft);
+}
+
+.btn-primary-map {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #ffffff;
+  text-decoration: none;
+  margin-top: 12px;
+}
+
+.btn-primary-map:hover {
+  background: var(--accent-hover);
+}
+
+@media (max-width: 640px) {
+  .map-page { padding: 16px 16px; }
+  .map-container { height: 400px; }
+}

@@ -1,0 +1,131 @@
+/* Listados y páginas de detalle */
+.list-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.list-header h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.list-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--text-soft);
+}
+
+.city-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.accommodation-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Detalle de ciudad */
+.detail-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.detail-header {
+  margin-bottom: 32px;
+}
+
+.detail-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.back-link {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-right: 8px;
+}
+
+.back-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.detail-cover {
+  height: 320px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  margin-bottom: 16px;
+}
+
+.detail-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-info h1 {
+  font-size: 34px;
+  margin: 0 0 8px;
+}
+
+.detail-region {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.detail-desc {
+  font-size: 16px;
+  color: var(--text-soft);
+  margin: 0 0 14px;
+}
+
+.detail-coords {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin: 0;
+}
+
+.section-title {
+  font-size: 20px;
+  margin: 32px 0 16px;
+  color: var(--text-h);
+}
+
+@media (max-width: 640px) {
+  .list-page, .detail-page { padding: 16px 16px; }
+  .list-header { flex-direction: column; align-items: flex-start; }
+  .detail-actions { width: 100%; justify-content: space-between; }
+  .btn-primary, .btn-secondary { width: 48%; }
+  .detail-info h1 { font-size: 26px; }
+}
