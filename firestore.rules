@@ -1,18 +1,63 @@
-rules_version='2'
-
+rules_version = '2'
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2026, 12, 11);
+
+    /* ========================================================================
+       MODELO DE DATOS
+       - cities: información de ciudades (pública, de solo lectura para visitas)
+       - accommodations: información de alojamientos (pública)
+       - accommodationStatuses: estado compartido de cada alojamiento
+                                (pendiente / favorita / descartada)
+                                
+       IMPORTANTE: esta aplicación NO usa autenticación. Cualquier persona con
+       el enlace puede leer y, si las reglas de escritura lo permiten, escribir.
+       No hay forma fiable de distinguir a un familiar de otro visitante anónimo.
+
+       Reglas actuales: lectura pública en todo; escritura pública en las tres
+       colecciones (necesaria para que la app funcione sin cuentas).
+       Debido a la ausencia de autenticación, esto significa que CUALQUIER
+       visitante puede crear, editar o eliminar ciudades, alojamientos y estados.
+       Úsalo solo si aceptás ese riesgo para una app familiar de enlace privado.
+       ======================================================================== */
+
+    /* ---------- Ciudades ---------- */
+    match /cities/{cityId} {
+      allow read: if true;
+      // Escritura pública: se exige que traiga los campos obligatorios.
+      allow create: if request.resource.data.keys().hasAll(['name', 'region', 'coverImage'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.coverImage is string;
+      allow update: if true;
+      allow delete: if true;
+    }
+
+    /* ---------- Alojamientos ---------- */
+    match /accommodations/{accommodationId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll([
+        'name', 'cityId', 'neighborhood', 'description', 'priceTotal',
+        'currency', 'guestsForPrice', 'coverImage',
+      ])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.cityId is string
+        && request.resource.data.cityId.size() > 0
+        && request.resource.data.coverImage is string
+        && (request.resource.data.currency in ['USD', 'BRL']);
+      allow update: if true;
+      allow delete: if true;
+    }
+
+    /* ---------- Estados familiares compartidos ---------- */
+    /* Esta colección está separada de accommodations. Escribir aquí NO puede
+       modificar otros campos de los alojamientos. Solo se permiten los campos
+       'status' y 'updatedAt', con un valor de status válido. */
+    match /accommodationStatuses/{accommodationId} {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['status', 'updatedAt'])
+        && request.resource.data.size() == 2
+        && request.resource.data.status in ['pending', 'favorite', 'discarded'];
     }
   }
 }
