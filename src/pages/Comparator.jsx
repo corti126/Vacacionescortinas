@@ -193,11 +193,11 @@ export default function Comparator() {
           </div>
         )
       case 'priceTotal':
-        return <div className="cmp-cell-price">{formatPrice(a.priceTotal, a.currency)}</div>
+        return <div className="cmp-cell-price">{formatPrice(a.priceTotal)}</div>
       case 'pricePerPerson':
         return ppp != null ? (
           <div className="cmp-cell-price">
-            {formatPrice(ppp, a.currency)}
+            {formatPrice(ppp)}
           </div>
         ) : (
           <div className="cmp-cell-muted">—</div>

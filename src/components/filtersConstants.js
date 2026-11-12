@@ -25,4 +25,7 @@ export const EMPTY_FILTERS = {
   garage: false,
   minRating: '',
   status: '',
+  // Filtro de disponibilidad (calendario): rango [availFrom .. availTo].
+  availFrom: '',
+  availTo: '',
 }

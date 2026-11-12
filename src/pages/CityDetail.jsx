@@ -1,4 +1,6 @@
-/* Detalle de una ciudad y sus alojamientos, con filtros, ordenamiento y pestañas de estado */
+/* Detalle de una ciudad y sus alojamientos: filtros combinables (incluido
+   el calendario de disponibilidad), ordenamiento y pestañas de estado.
+   La creación/edición de alojamientos vive en /admin/alojamientos. */
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
@@ -6,10 +8,13 @@ import {
   observeAccommodationsByCity,
   observeAccommodationStatuses,
   setAccommodationStatus,
-  ACCOMMODATION_STATUS,
 } from '../services/firestore'
 import FiltersPanel from '../components/FiltersPanel'
 import { EMPTY_FILTERS, SORT_OPTIONS } from '../components/filtersConstants'
+import {
+  filterAccommodations,
+  sortAccommodations,
+} from '../utils/filterAccommodations'
 import StatusTabs from '../components/StatusTabs'
 import '../styles/lists.css'
 
@@ -58,50 +63,15 @@ export default function CityDetail() {
     return m
   }, [statuses])
 
-  const filtered = useMemo(() => {
-    return accommodations.filter((a) => {
-      const st = statusesById[a.id]?.status || ACCOMMODATION_STATUS.PENDING
-      if (filters.cityId && a.cityId !== filters.cityId) return false
-      if (filters.maxPrice && Number(a.priceTotal) > Number(filters.maxPrice)) return false
-      if (
-        filters.maxDistance &&
-        Number(a.distanceToBeach) > Number(filters.maxDistance)
-      )
-        return false
-      if (filters.minCapacity && Number(a.capacity) < Number(filters.minCapacity))
-        return false
-      if (filters.minBedrooms && Number(a.bedrooms) < Number(filters.minBedrooms))
-        return false
-      if (filters.pool && a.pool !== true) return false
-      if (filters.garage && a.garage !== true) return false
-      if (filters.minRating && Number(a.myRating) < Number(filters.minRating))
-        return false
-      if (filters.status && st !== filters.status) return false
-      return true
-    })
-  }, [accommodations, statusesById, filters])
+  const filtered = useMemo(
+    () => filterAccommodations(accommodations, statusesById, filters),
+    [accommodations, statusesById, filters],
+  )
 
-  const sorted = useMemo(() => {
-    const arr = [...filtered]
-    switch (sort) {
-      case 'price-asc':
-        return arr.sort((a, b) => Number(a.priceTotal) - Number(b.priceTotal))
-      case 'price-desc':
-        return arr.sort((a, b) => Number(b.priceTotal) - Number(a.priceTotal))
-      case 'distance-asc':
-        return arr.sort((a, b) => Number(a.distanceToBeach) - Number(b.distanceToBeach))
-      case 'rating-desc':
-        return arr.sort(
-          (a, b) => Number(b.myRating || -1) - Number(a.myRating || -1),
-        )
-      case 'rating-asc':
-        return arr.sort(
-          (a, b) => Number(a.myRating || 11) - Number(b.myRating || 11),
-        )
-      default:
-        return arr
-    }
-  }, [filtered, sort])
+  const sorted = useMemo(
+    () => sortAccommodations(filtered, sort),
+    [filtered, sort],
+  )
 
   if (loading) {
     return (
@@ -144,12 +114,6 @@ export default function CityDetail() {
           <Link to="/ciudades" className="back-link">← Volver a ciudades</Link>
           <div className="detail-actions">
             <Link to={`/ciudades/${id}/editar`} className="btn-secondary">Editar ciudad</Link>
-            <Link
-              to={`/ciudades/${id}/nuevo-alojamiento`}
-              className="btn-primary"
-            >
-              + Nuevo alojamiento
-            </Link>
           </div>
         </div>
         <div className="detail-cover">
@@ -183,6 +147,7 @@ export default function CityDetail() {
 
       <div className="results-summary">
         {sorted.length} alojamiento{sorted.length !== 1 ? 's' : ''}
+        {filters.availFrom && ' disponibles en las fechas elegidas'}
         {' · '}
         ordenado por: {sortLabel}
       </div>
@@ -191,6 +156,11 @@ export default function CityDetail() {
         accommodations={sorted}
         statusesById={statusesById}
         citiesById={{ [city.id]: city }}
+        emptyMessage={
+          accommodations.length > 0
+            ? 'Ningún alojamiento coincide con los filtros y las fechas seleccionadas.'
+            : null
+        }
         onStatusChange={(accommodationId, nextStatus) =>
           setAccommodationStatus(accommodationId, nextStatus)
         }

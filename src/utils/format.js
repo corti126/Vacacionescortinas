@@ -1,11 +1,11 @@
 /* Utilidades de formateo */
 
-export function formatPrice(value, currency = 'USD') {
+export function formatPrice(value) {
   const n = Number(value)
   if (!Number.isFinite(n)) return '-'
-  return new Intl.NumberFormat('es-BR', {
+  return new Intl.NumberFormat('es-US', {
     style: 'currency',
-    currency,
+    currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(n)

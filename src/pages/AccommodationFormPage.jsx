@@ -1,6 +1,6 @@
-/* Crear o editar un alojamiento */
+/* Crear o editar un alojamiento (solo desde /admin/alojamientos). */
 import { useEffect, useState, useCallback } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, Link } from 'react-router-dom'
 import {
   getAccommodation,
   observeCities,
@@ -17,6 +17,7 @@ import {
   maxValue,
 } from '../utils/validation'
 import { formatPrice, pricePerPerson } from '../utils/format'
+import { formatRange } from '../utils/dates'
 import ImageInput from '../components/ImageInput'
 import '../styles/forms.css'
 
@@ -50,8 +51,12 @@ function ratingLabel(value) {
 
 export default function AccommodationFormPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { id, cityId: routeCityId } = useParams()
   const isEdit = !!id
+  // La creación/edición vive en el panel de admin: según desde dónde se
+  // entró, el "Volver" y el guardado devuelven a /admin/alojamientos.
+  const fromAdmin = location.pathname.startsWith('/admin')
   const [cities, setCities] = useState([])
   const [acc, setAcc] = useState(null)
   const [values, setValues] = useState({
@@ -61,7 +66,6 @@ export default function AccommodationFormPage() {
     description: '',
     airbnbUrl: '',
     priceTotal: '',
-    currency: 'BRL',
     guestsForPrice: '',
     distanceToBeach: '',
     capacity: '',
@@ -76,10 +80,14 @@ export default function AccommodationFormPage() {
     notes: '',
     coverImage: '',
     images: [],
+    availableRanges: [],
   })
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState(null)
+  // Borrador del rango de días disponibles (desde / hasta).
+  const [rangeDraft, setRangeDraft] = useState({ start: '', end: '' })
+  const [rangeError, setRangeError] = useState(null)
 
   useEffect(() => {
     const unsub = observeCities(setCities)
@@ -102,7 +110,6 @@ export default function AccommodationFormPage() {
             description: a.description || '',
             airbnbUrl: a.airbnbUrl || '',
             priceTotal: a.priceTotal != null ? String(a.priceTotal) : '',
-            currency: a.currency || 'BRL',
             guestsForPrice: a.guestsForPrice != null ? String(a.guestsForPrice) : '',
             distanceToBeach: a.distanceToBeach != null ? String(a.distanceToBeach) : '',
             capacity: a.capacity != null ? String(a.capacity) : '',
@@ -117,6 +124,9 @@ export default function AccommodationFormPage() {
             notes: a.notes || '',
             coverImage: a.coverImage || '',
             images: a.images || [],
+            availableRanges: Array.isArray(a.availableRanges)
+              ? a.availableRanges.filter((r) => r && r.start && r.end)
+              : [],
           })
         } else {
           setMessage('No se encontró el alojamiento.')
@@ -142,6 +152,39 @@ export default function AccommodationFormPage() {
     })
   }
 
+  /* --- Días disponibles (rangos de fechas manuales) --- */
+  const addRange = () => {
+    const { start, end } = rangeDraft
+    if (!start || !end) {
+      setRangeError('Elegí las dos fechas: desde y hasta.')
+      return
+    }
+    if (end < start) {
+      setRangeError('La fecha "hasta" no puede ser anterior a la fecha "desde".')
+      return
+    }
+    const duplicated = (values.availableRanges || []).some(
+      (r) => r.start === start && r.end === end,
+    )
+    if (duplicated) {
+      setRangeError('Ese rango ya está cargado.')
+      return
+    }
+    setRangeError(null)
+    setValues((prev) => ({
+      ...prev,
+      availableRanges: [...(prev.availableRanges || []), { start, end }],
+    }))
+    setRangeDraft({ start: '', end: '' })
+  }
+
+  const removeRange = (index) => {
+    setValues((prev) => ({
+      ...prev,
+      availableRanges: prev.availableRanges.filter((_, i) => i !== index),
+    }))
+  }
+
   const ppp = pricePerPerson(values.priceTotal, values.guestsForPrice)
 
   const handleSubmit = useCallback(async (e) => {
@@ -162,7 +205,6 @@ export default function AccommodationFormPage() {
         description: values.description.trim(),
         airbnbUrl: values.airbnbUrl.trim(),
         priceTotal: Number(values.priceTotal),
-        currency: values.currency,
         guestsForPrice: Number(values.guestsForPrice),
         distanceToBeach: values.distanceToBeach ? Number(values.distanceToBeach) : 0,
         capacity: values.capacity ? Number(values.capacity) : undefined,
@@ -177,14 +219,17 @@ export default function AccommodationFormPage() {
         notes: values.notes.trim(),
         coverImage: values.coverImage.trim(),
         images: (values.images || []).filter(Boolean),
+        availableRanges: (values.availableRanges || [])
+          .filter((r) => r && r.start && r.end)
+          .map((r) => ({ start: r.start, end: r.end })),
       }
       if (isEdit) {
         await updateAccommodation(id, payload)
-        // Al editar, la vista correcta es la del alojamiento (no el formulario).
-        navigate(`/alojamientos/${id}`)
+        // El guardado vuelve al panel de administración de alojamientos.
+        navigate(fromAdmin ? '/admin/alojamientos' : `/alojamientos/${id}`)
       } else {
         await createAccommodation(payload)
-        navigate(`/ciudades/${values.cityId}`)
+        navigate(fromAdmin ? '/admin/alojamientos' : `/ciudades/${values.cityId}`)
       }
     } catch (err) {
       setMessage('Error al guardar el alojamiento. Revisá la conexión e intentá de nuevo.')
@@ -192,7 +237,7 @@ export default function AccommodationFormPage() {
     } finally {
       setSaving(false)
     }
-  }, [values, isEdit, id, navigate])
+  }, [values, isEdit, id, navigate, fromAdmin])
 
   const cityOptions = cities.map((c) => ({ value: c.id, label: c.name }))
 
@@ -304,7 +349,7 @@ export default function AccommodationFormPage() {
         </div>
 
         <fieldset className="form-fieldset">
-          <legend className="form-legend">Precio</legend>
+          <legend className="form-legend">Precio (todo en USD)</legend>
           <div className="form-grid">
             <div className="form-field">
               <label>Precio total (estadia completa) <span className="required">*</span></label>
@@ -319,17 +364,6 @@ export default function AccommodationFormPage() {
                 className={errors.priceTotal ? 'has-error' : undefined}
               />
               {errors.priceTotal && <span className="error-msg">{errors.priceTotal}</span>}
-            </div>
-            <div className="form-field">
-              <label>Moneda</label>
-              <select
-                name="currency"
-                value={values.currency}
-                onChange={(e) => handleChange('currency', e.target.value)}
-              >
-                <option value="BRL">BRL (Reales brasileños)</option>
-                <option value="USD">USD (Dólares)</option>
-              </select>
             </div>
             <div className="form-field">
               <label>Personas para el cálculo <span className="required">*</span></label>
@@ -347,7 +381,7 @@ export default function AccommodationFormPage() {
             <div className="form-field">
               <label>Precio por persona</label>
               <div className="price-per-display">
-                {ppp != null ? formatPrice(ppp, values.currency) : '—'}
+                {ppp != null ? formatPrice(ppp) : '—'}
               </div>
             </div>
           </div>
@@ -446,6 +480,69 @@ export default function AccommodationFormPage() {
               />
               Aire acondicionado
             </label>
+          </div>
+        </fieldset>
+
+        <fieldset className="form-fieldset">
+          <legend className="form-legend">Días disponibles</legend>
+          <p className="form-hint">
+            Cargá manualmente los rangos de fechas en los que el alojamiento
+            está libre. La familia podrá filtrar por fechas y solo verán
+            opciones que tengan <strong>todos</strong> los días elegidos
+            disponibles.
+          </p>
+          <div className="availability-ranges">
+            <div className="availability-ranges-list">
+              {(values.availableRanges || []).map((r, i) => (
+                <div key={i} className="availability-range-row">
+                  <span className="availability-range-text">
+                    📅 {formatRange(r)}
+                  </span>
+                  <button
+                    type="button"
+                    className="availability-range-remove"
+                    onClick={() => removeRange(i)}
+                    aria-label={`Eliminar rango ${formatRange(r)}`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              {(values.availableRanges || []).length === 0 && (
+                <p className="availability-empty">Sin rangos cargados.</p>
+              )}
+            </div>
+            <div className="availability-ranges-add">
+              <input
+                type="date"
+                value={rangeDraft.start}
+                onChange={(e) =>
+                  setRangeDraft((prev) => ({ ...prev, start: e.target.value }))
+                }
+                className="availability-date-input"
+                aria-label="Fecha desde"
+              />
+              <span className="availability-separator">hasta</span>
+              <input
+                type="date"
+                value={rangeDraft.end}
+                onChange={(e) =>
+                  setRangeDraft((prev) => ({ ...prev, end: e.target.value }))
+                }
+                className="availability-date-input"
+                aria-label="Fecha hasta"
+              />
+              {rangeError && (
+                <span className="availability-error">{rangeError}</span>
+              )}
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={addRange}
+              >
+                + Agregar rango
+              </button>
+            </div>
           </div>
         </fieldset>
 

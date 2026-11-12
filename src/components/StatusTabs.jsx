@@ -14,6 +14,7 @@ export default function StatusTabs({
   accommodations,
   statusesById,
   citiesById,
+  emptyMessage = null,
   onStatusChange,
 }) {
   const [activeTab, setActiveTab] = useState(null)
@@ -58,7 +59,7 @@ export default function StatusTabs({
         {filtered.length === 0 ? (
           <div className="status-tabs-empty">
             {activeTab === null
-              ? 'No hay alojamientos cargados.'
+              ? emptyMessage || 'No hay alojamientos cargados.'
               : `No hay alojamientos marcados como ${statusLabel(activeTab).toLowerCase()}.`}
           </div>
         ) : (

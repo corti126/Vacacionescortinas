@@ -251,9 +251,107 @@ textarea.has-error:focus {
   font-weight: 600;
 }
 
+/* Texto de ayuda dentro de fieldsets */
+.form-hint {
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+.form-hint strong { color: var(--accent); }
+
+/* Días disponibles */
+.availability-ranges {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.availability-ranges-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.availability-range-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.availability-range-remove {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.availability-range-remove:hover {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+  color: var(--danger);
+}
+
+.availability-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-soft);
+  font-style: italic;
+}
+
+.availability-ranges-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--sea) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sea) 30%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.availability-date-input {
+  flex: 1 1 160px;
+  padding: 9px 12px;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-h);
+}
+
+.availability-separator {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.availability-error {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--danger);
+}
+
 @media (max-width: 640px) {
   .form-page { padding: 16px 16px; }
   .form-card { padding: 16px; }
   .form-actions { flex-direction: column-reverse; }
   .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  .availability-ranges-add { flex-direction: column; align-items: stretch; }
+  .availability-date-input { flex: 1 1 100%; }
+  .availability-separator { display: none; }
 }

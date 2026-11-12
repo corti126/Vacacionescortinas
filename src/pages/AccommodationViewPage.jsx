@@ -159,11 +159,11 @@ export default function AccommodationViewPage() {
           <div className="view-card">
             <h3>Precio</h3>
             <p className="view-price">
-              {formatPrice(accommodation.priceTotal, accommodation.currency)}
+              {formatPrice(accommodation.priceTotal)}
             </p>
             {ppp != null && (
               <p className="view-price-per">
-                {formatPrice(ppp, accommodation.currency)} por persona
+                {formatPrice(ppp)} por persona
               </p>
             )}
             <p className="view-muted">

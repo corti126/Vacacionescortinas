@@ -8,6 +8,7 @@ import Layout from './layout/Layout'
 // code splitting), todos los estilos globales ya están disponibles.
 import './styles/app.css'
 import './styles/components.css'
+import './styles/filters.css'
 import './styles/lists.css'
 import './styles/forms.css'
 import './styles/home.css'
@@ -28,6 +29,7 @@ const AccommodationViewPage = lazy(() => import('./pages/AccommodationViewPage')
 const CityFormPage = lazy(() => import('./pages/CityFormPage'))
 const AccommodationFormPage = lazy(() => import('./pages/AccommodationFormPage'))
 const Admin = lazy(() => import('./pages/Admin'))
+const AdminAccommodations = lazy(() => import('./pages/AdminAccommodations'))
 
 function RouteFallback() {
   return (
@@ -51,17 +53,16 @@ function App() {
                 <Route path="/ciudades/nuevo" element={<CityFormPage />} />
                 <Route path="/ciudades/:id" element={<CityDetail />} />
                 <Route path="/ciudades/:id/editar" element={<CityFormPage />} />
-                <Route
-                  path="/ciudades/:cityId/nuevo-alojamiento"
-                  element={<AccommodationFormPage />}
-                />
                 <Route path="/alojamientos" element={<AccommodationsList />} />
-                <Route path="/alojamientos/nuevo" element={<AccommodationFormPage />} />
                 <Route path="/alojamientos/:id" element={<AccommodationViewPage />} />
-                <Route path="/alojamientos/:id/editar" element={<AccommodationFormPage />} />
                 <Route path="/mapa" element={<Mapa />} />
                 <Route path="/comparador" element={<Comparator />} />
+                {/* Administración de alojamientos: creación y edición SOLO
+                    desde el panel de admin (la pestaña pública es de lectura). */}
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/alojamientos" element={<AdminAccommodations />} />
+                <Route path="/admin/alojamientos/nuevo" element={<AccommodationFormPage />} />
+                <Route path="/admin/alojamientos/:id/editar" element={<AccommodationFormPage />} />
                 <Route path="*" element={<Home />} />
               </Routes>
             </Suspense>

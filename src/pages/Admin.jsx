@@ -21,12 +21,12 @@ export default function Admin() {
           <h3>Ciudades</h3>
           <p>Ver, crear, editar y eliminar ciudades (destinos).</p>
         </Link>
-        <Link to="/alojamientos" className="admin-card">
+        <Link to="/admin/alojamientos" className="admin-card">
           <span className="admin-card-icon">🏠</span>
           <h3>Alojamientos</h3>
           <p>
-            Ver, crear, editar y eliminar alojamientos. Cada uno se carga
-            asignado a una ciudad creada.
+            Crear, editar y eliminar alojamientos, con sus precios, imágenes
+            y días disponibles.
           </p>
         </Link>
         <Link to="/mapa" className="admin-card">
@@ -40,13 +40,13 @@ export default function Admin() {
         <h2>Cargar contenido nuevo</h2>
         <div className="admin-quick-create-actions">
           <Link to="/ciudades/nuevo" className="btn-primary">+ Nueva ciudad</Link>
-          <Link to="/alojamientos/nuevo" className="btn-primary">+ Nuevo alojamiento</Link>
+          <Link to="/admin/alojamientos/nuevo" className="btn-primary">+ Nuevo alojamiento</Link>
         </div>
         <p className="admin-quick-create-hint">
-          Los alojamientos se crean siempre <strong>asignados a una ciudad</strong>:
-          primero cargá el destino (por ejemplo: Río de Janeiro, Búzios,
-          Florianópolis) y después agregá las casas o departamentos dentro de esa
-          ciudad.
+          Los alojamientos se cargan siempre desde acá, <strong>asignados a una
+          ciudad creada</strong>: primero el destino (Río de Janeiro, Búzios,
+          Florianópolis…) y después las casas o departamentos de esa ciudad.
+          La pestaña “Alojamientos” es solo de consulta para la familia.
         </p>
       </div>
     </div>

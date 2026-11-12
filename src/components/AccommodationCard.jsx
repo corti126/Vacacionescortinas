@@ -39,11 +39,11 @@ export default function AccommodationCard({
         </div>
         <div className="accommodation-card-price">
           <span className="accommodation-card-price-total">
-            {formatPrice(accommodation.priceTotal, accommodation.currency)}
+            {formatPrice(accommodation.priceTotal)}
           </span>
           {ppp != null && (
             <span className="accommodation-card-price-per">
-              / persona {formatPrice(ppp, accommodation.currency)}
+              / persona {formatPrice(ppp)}
             </span>
           )}
         </div>
