@@ -1,31 +1,58 @@
-/* Brasil Trip — tema visual (paleta azul/índigo, sin verde) */
+/* Brasil Trip — sistema visual
+   Paleta multicolor: océano (azul/cyan), sol (ámbar), atardecer (coral),
+   playa-profundo (violeta) + estados con color propio. */
+
 :root,
 [data-theme="light"] {
-  --bg: #ffffff;
-  --surface: #f8fafc;
-  --surface-hover: #f1f5f9;
-  --text: #334155;
-  --text-soft: #64748b;
-  --text-h: #0f172a;
-  --border: #e2e8f0;
-  --border-soft: #f1f5f9;
-  --accent: #4f46e5;           /* índigo moderno */
-  --accent-hover: #4338ca;
-  --accent-soft: rgba(79, 70, 229, 0.10);
-  --accent-border: rgba(79, 70, 229, 0.35);
-  --success: #059669;          /* esmeralda suave, solo para estados positivos */
-  --danger: #dc2626;
+  /* Fondos y textos */
+  --bg: #f7f9fc;
+  --surface: #ffffff;
+  --surface-hover: #eef3fa;
+  --text: #3d4a5c;
+  --text-soft: #6b7a90;
+  --text-h: #101a2b;
+  --border: #e3e9f2;
+  --border-soft: #eef2f8;
+
+  /* Color de marca (océano) */
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-soft: rgba(2, 132, 199, 0.10);
+  --accent-border: rgba(2, 132, 199, 0.35);
+
+  /* Segundos colores para degradados y acentos */
+  --accent-2: #7c5cff;        /* violeta */
+  --accent-3: #ff6b4a;        /* coral / atardecer */
+  --sun: #f59e0b;             /* ámbar sol */
+  --sea: #06b6d4;             /* cyan playa */
+  --pink: #f43f5e;            /* rosa */
+
+  /* Degradados llamativos */
+  --grad-brand: linear-gradient(120deg, #0284c7 0%, #7c5cff 55%, #ff6b4a 115%);
+  --grad-brand-soft: linear-gradient(120deg, rgba(2, 132, 199, 0.14), rgba(124, 92, 255, 0.14) 55%, rgba(255, 107, 74, 0.14));
+  --grad-hero: radial-gradient(1200px 500px at 15% -10%, rgba(6, 182, 212, 0.28), transparent 60%),
+               radial-gradient(1000px 460px at 85% 0%, rgba(124, 92, 255, 0.26), transparent 60%),
+               radial-gradient(900px 500px at 50% 120%, rgba(255, 107, 74, 0.20), transparent 60%);
+
+  /* Semánticos */
+  --success: #0d9488;
+  --danger: #e11d48;
   --warning: #d97706;
-  --info: #0ea5e9;             /* azul cielo */
-  --shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-  --shadow-soft: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
-  --radius: 14px;
-  --radius-sm: 8px;
+  --info: #0284c7;
+
+  /* Estados compartidos */
+  --status-favorite: #f43f5e;
+  --status-pending: #f59e0b;
+  --status-discarded: #64748b;
+
+  --shadow: 0 14px 30px -10px rgba(16, 26, 43, 0.18), 0 6px 10px -4px rgba(16, 26, 43, 0.08);
+  --shadow-soft: 0 6px 16px -6px rgba(16, 26, 43, 0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
 
   --sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  --heading: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  --heading: var(--sans);
 
   font: 18px/150% var(--sans);
   letter-spacing: 0.16px;
@@ -39,24 +66,43 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --surface-hover: #334155;
-  --text: #f1f5f9;
+  --bg: #0a1122;
+  --surface: #121c31;
+  --surface-hover: #1c2942;
+  --text: #cbd5e6;
   --text-soft: #94a3b8;
   --text-h: #f8fafc;
-  --border: #334155;
-  --border-soft: #1e293b;
-  --accent: #818cf8;           /* índigo claro para modo oscuro */
-  --accent-hover: #a5b4fc;
-  --accent-soft: rgba(129, 140, 248, 0.15);
-  --accent-border: rgba(129, 140, 248, 0.45);
-  --success: #34d399;
-  --danger: #f87171;
+  --border: #25324c;
+  --border-soft: #1a2439;
+
+  --accent: #38bdf8;
+  --accent-hover: #7dd3fc;
+  --accent-soft: rgba(56, 189, 248, 0.14);
+  --accent-border: rgba(56, 189, 248, 0.42);
+
+  --accent-2: #a78bfa;
+  --accent-3: #ff8a65;
+  --sun: #fbbf24;
+  --sea: #22d3ee;
+  --pink: #fb7185;
+
+  --grad-brand: linear-gradient(120deg, #38bdf8 0%, #a78bfa 55%, #ff8a65 115%);
+  --grad-brand-soft: linear-gradient(120deg, rgba(56, 189, 248, 0.16), rgba(167, 139, 250, 0.16) 55%, rgba(255, 138, 101, 0.16));
+  --grad-hero: radial-gradient(1200px 500px at 15% -10%, rgba(34, 211, 238, 0.20), transparent 60%),
+               radial-gradient(1000px 460px at 85% 0%, rgba(167, 139, 250, 0.20), transparent 60%),
+               radial-gradient(900px 500px at 50% 120%, rgba(255, 138, 101, 0.14), transparent 60%);
+
+  --success: #2dd4bf;
+  --danger: #fb7185;
   --warning: #fbbf24;
   --info: #38bdf8;
-  --shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.45), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --shadow-soft: 0 4px 12px -2px rgba(0, 0, 0, 0.35);
+
+  --status-favorite: #fb7185;
+  --status-pending: #fbbf24;
+  --status-discarded: #94a3b8;
+
+  --shadow: 0 16px 34px -12px rgba(0, 0, 0, 0.6), 0 6px 12px -4px rgba(0, 0, 0, 0.4);
+  --shadow-soft: 0 6px 16px -6px rgba(0, 0, 0, 0.5);
 
   color-scheme: dark;
   color: var(--text);
@@ -109,28 +155,16 @@ h2,
 h3,
 h4 {
   font-family: var(--heading);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-h);
   line-height: 120%;
   margin: 0 0 12px;
 }
 
-h1 {
-  font-size: 40px;
-  letter-spacing: -0.5px;
-}
-h2 {
-  font-size: 28px;
-  letter-spacing: -0.4px;
-}
-h3 {
-  font-size: 22px;
-  letter-spacing: -0.3px;
-}
-h4 {
-  font-size: 18px;
-  letter-spacing: -0.2px;
-}
+h1 { font-size: 40px; letter-spacing: -0.6px; }
+h2 { font-size: 28px; letter-spacing: -0.4px; }
+h3 { font-size: 22px; letter-spacing: -0.3px; }
+h4 { font-size: 18px; letter-spacing: -0.2px; }
 
 p {
   margin: 0 0 12px;
@@ -156,12 +190,8 @@ ul {
 }
 
 @media (max-width: 640px) {
-  .section {
-    padding: 40px 0;
-  }
-  html {
-    font-size: 16px;
-  }
+  .section { padding: 40px 0; }
+  html { font-size: 16px; }
 }
 
 .card {
@@ -177,6 +207,14 @@ ul {
   transform: translateY(-4px);
   box-shadow: var(--shadow);
   border-color: var(--accent-border);
+}
+
+/* Texto con degradado de marca */
+.text-gradient {
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .visually-hidden {

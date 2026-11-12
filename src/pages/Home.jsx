@@ -29,11 +29,16 @@ export default function Home() {
   const [cities, setCities] = useState([])
   const [accommodations, setAccommodations] = useState([])
   const [statuses, setStatuses] = useState([])
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
-    const unsubCities = observeCities(setCities)
-    const unsubAccommodations = observeAccommodations(setAccommodations)
-    const unsubStatuses = observeAccommodationStatuses(setStatuses)
+    const onError = (error) => {
+      console.error(error)
+      setLoadError(true)
+    }
+    const unsubCities = observeCities(setCities, onError)
+    const unsubAccommodations = observeAccommodations(setAccommodations, onError)
+    const unsubStatuses = observeAccommodationStatuses(setStatuses, onError)
 
     return () => {
       unsubCities()
@@ -61,6 +66,13 @@ export default function Home() {
           <img src={heroImg} alt="" className="home-hero-image" />
           <h1>Brasil Trip 🇧🇷</h1>
           <p className="home-subtitle">Nuestro próximo viaje en familia.</p>
+
+          {loadError && (
+            <div className="load-error" role="alert">
+              No se pudo conectar con Firestore. Revisá la conexión a internet y
+              recargá la página.
+            </div>
+          )}
 
           <div className="home-stats">
             <div className="stat">

@@ -77,39 +77,45 @@ export default function AccommodationFormPage() {
 
   useEffect(() => {
     if (!isEdit) return
-    const unsub = observeCities(() => {}) // keep cities subscription alive
-    // Cargar el alojamiento una vez
+    // Cargar el alojamiento una vez (el listado de ciudades ya está suscripto
+    // por el efecto anterior: no hace falta abrir otra conexión).
     const load = async () => {
-      const a = await getAccommodation(id)
-      if (a) {
-        setAcc(a)
-        setValues({
-          cityId: a.cityId || '',
-          name: a.name || '',
-          neighborhood: a.neighborhood || '',
-          description: a.description || '',
-          airbnbUrl: a.airbnbUrl || '',
-          priceTotal: a.priceTotal != null ? String(a.priceTotal) : '',
-          currency: a.currency || 'BRL',
-          guestsForPrice: a.guestsForPrice != null ? String(a.guestsForPrice) : '',
-          distanceToBeach: a.distanceToBeach != null ? String(a.distanceToBeach) : '',
-          capacity: a.capacity != null ? String(a.capacity) : '',
-          bedrooms: a.bedrooms != null ? String(a.bedrooms) : '',
-          bathrooms: a.bathrooms != null ? String(a.bathrooms) : '',
-          pool: !!a.pool,
-          garage: !!a.garage,
-          grill: !!a.grill,
-          airConditioning: !!a.airConditioning,
-          myRating: a.myRating != null ? String(a.myRating) : '',
-          airbnbRating: a.airbnbRating != null ? String(a.airbnbRating) : '',
-          notes: a.notes || '',
-          coverImage: a.coverImage || '',
-          images: a.images || [],
-        })
+      try {
+        const a = await getAccommodation(id)
+        if (a) {
+          setAcc(a)
+          setValues({
+            cityId: a.cityId || '',
+            name: a.name || '',
+            neighborhood: a.neighborhood || '',
+            description: a.description || '',
+            airbnbUrl: a.airbnbUrl || '',
+            priceTotal: a.priceTotal != null ? String(a.priceTotal) : '',
+            currency: a.currency || 'BRL',
+            guestsForPrice: a.guestsForPrice != null ? String(a.guestsForPrice) : '',
+            distanceToBeach: a.distanceToBeach != null ? String(a.distanceToBeach) : '',
+            capacity: a.capacity != null ? String(a.capacity) : '',
+            bedrooms: a.bedrooms != null ? String(a.bedrooms) : '',
+            bathrooms: a.bathrooms != null ? String(a.bathrooms) : '',
+            pool: !!a.pool,
+            garage: !!a.garage,
+            grill: !!a.grill,
+            airConditioning: !!a.airConditioning,
+            myRating: a.myRating != null ? String(a.myRating) : '',
+            airbnbRating: a.airbnbRating != null ? String(a.airbnbRating) : '',
+            notes: a.notes || '',
+            coverImage: a.coverImage || '',
+            images: a.images || [],
+          })
+        } else {
+          setMessage('No se encontró el alojamiento.')
+        }
+      } catch (err) {
+        console.error(err)
+        setMessage('No se pudo cargar el alojamiento. Revisá la conexión y recargá.')
       }
     }
     load()
-    return unsub
   }, [isEdit, id])
 
   const handleChange = (field, value) => {
@@ -163,13 +169,14 @@ export default function AccommodationFormPage() {
       }
       if (isEdit) {
         await updateAccommodation(id, payload)
+        // Al editar, la vista correcta es la del alojamiento (no el formulario).
+        navigate(`/alojamientos/${id}`)
       } else {
         await createAccommodation(payload)
+        navigate(`/ciudades/${values.cityId}`)
       }
-      setMessage(isEdit ? 'Alojamiento actualizado.' : 'Alojamiento creado.')
-      navigate(isEdit ? `/alojamientos/${id}/editar` : `/ciudades/${values.cityId}`)
     } catch (err) {
-      setMessage('Error al guardar el alojamiento.')
+      setMessage('Error al guardar el alojamiento. Revisá la conexión e intentá de nuevo.')
       console.error(err)
     } finally {
       setSaving(false)
@@ -194,7 +201,7 @@ export default function AccommodationFormPage() {
   return (
     <div className="form-page">
       <div className="form-header">
-        <Link to={isEdit ? `/alojamientos/${id}/editar` : `/ciudades/${values.cityId || 'nuevo'}`} className="back-link">
+        <Link to={isEdit ? `/alojamientos/${id}` : `/ciudades/${values.cityId || 'nuevo'}`} className="back-link">
           ← Volver
         </Link>
         <h1>{isEdit ? 'Editar alojamiento' : 'Nuevo alojamiento'}</h1>
@@ -207,7 +214,7 @@ export default function AccommodationFormPage() {
             value={values.cityId}
             onChange={(e) => handleChange('cityId', e.target.value)}
             disabled={cityDisabled}
-            error={!!errors.cityId}
+            className={errors.cityId ? 'has-error' : undefined}
           >
             <option value="">Seleccionar ciudad</option>
             {cityOptions.map((o) => (
@@ -227,7 +234,7 @@ export default function AccommodationFormPage() {
             value={values.name}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="Casa frente al mar"
-            error={!!errors.name}
+            className={errors.name ? 'has-error' : undefined}
           />
           {errors.name && <span className="error-msg">{errors.name}</span>}
         </div>
@@ -239,7 +246,7 @@ export default function AccommodationFormPage() {
             value={values.neighborhood}
             onChange={(e) => handleChange('neighborhood', e.target.value)}
             placeholder="Leblon, Río de Janeiro"
-            error={!!errors.neighborhood}
+            className={errors.neighborhood ? 'has-error' : undefined}
           />
           {errors.neighborhood && <span className="error-msg">{errors.neighborhood}</span>}
         </div>
@@ -252,7 +259,7 @@ export default function AccommodationFormPage() {
             onChange={(e) => handleChange('description', e.target.value)}
             rows={4}
             placeholder="Qué te gustó, qué observar…"
-            error={!!errors.description}
+            className={errors.description ? 'has-error' : undefined}
           />
           {errors.description && <span className="error-msg">{errors.description}</span>}
         </div>
@@ -265,7 +272,7 @@ export default function AccommodationFormPage() {
             value={values.airbnbUrl}
             onChange={(e) => handleChange('airbnbUrl', e.target.value)}
             placeholder="https://airbnb.com/rooms/..."
-            error={!!errors.airbnbUrl}
+            className={errors.airbnbUrl ? 'has-error' : undefined}
           />
           {errors.airbnbUrl && <span className="error-msg">{errors.airbnbUrl}</span>}
         </div>
@@ -283,7 +290,7 @@ export default function AccommodationFormPage() {
                 value={values.priceTotal}
                 onChange={(e) => handleChange('priceTotal', e.target.value)}
                 placeholder="2500"
-                error={!!errors.priceTotal}
+                className={errors.priceTotal ? 'has-error' : undefined}
               />
               {errors.priceTotal && <span className="error-msg">{errors.priceTotal}</span>}
             </div>
@@ -293,7 +300,6 @@ export default function AccommodationFormPage() {
                 name="currency"
                 value={values.currency}
                 onChange={(e) => handleChange('currency', e.target.value)}
-                error={false}
               >
                 <option value="BRL">BRL (Reales brasileños)</option>
                 <option value="USD">USD (Dólares)</option>
@@ -308,7 +314,7 @@ export default function AccommodationFormPage() {
                 value={values.guestsForPrice}
                 onChange={(e) => handleChange('guestsForPrice', e.target.value)}
                 placeholder="4"
-                error={!!errors.guestsForPrice}
+                className={errors.guestsForPrice ? 'has-error' : undefined}
               />
               {errors.guestsForPrice && <span className="error-msg">{errors.guestsForPrice}</span>}
             </div>
@@ -333,7 +339,7 @@ export default function AccommodationFormPage() {
                 value={values.distanceToBeach}
                 onChange={(e) => handleChange('distanceToBeach', e.target.value)}
                 placeholder="300"
-                error={!!errors.distanceToBeach}
+                className={errors.distanceToBeach ? 'has-error' : undefined}
               />
               {errors.distanceToBeach && <span className="error-msg">{errors.distanceToBeach}</span>}
             </div>
@@ -346,7 +352,7 @@ export default function AccommodationFormPage() {
                 value={values.capacity}
                 onChange={(e) => handleChange('capacity', e.target.value)}
                 placeholder="6"
-                error={!!errors.capacity}
+                className={errors.capacity ? 'has-error' : undefined}
               />
               {errors.capacity && <span className="error-msg">{errors.capacity}</span>}
             </div>
@@ -359,7 +365,7 @@ export default function AccommodationFormPage() {
                 value={values.bedrooms}
                 onChange={(e) => handleChange('bedrooms', e.target.value)}
                 placeholder="3"
-                error={!!errors.bedrooms}
+                className={errors.bedrooms ? 'has-error' : undefined}
               />
               {errors.bedrooms && <span className="error-msg">{errors.bedrooms}</span>}
             </div>
@@ -372,7 +378,7 @@ export default function AccommodationFormPage() {
                 value={values.bathrooms}
                 onChange={(e) => handleChange('bathrooms', e.target.value)}
                 placeholder="2"
-                error={!!errors.bathrooms}
+                className={errors.bathrooms ? 'has-error' : undefined}
               />
               {errors.bathrooms && <span className="error-msg">{errors.bathrooms}</span>}
             </div>
@@ -430,7 +436,7 @@ export default function AccommodationFormPage() {
                 value={values.myRating}
                 onChange={(e) => handleChange('myRating', e.target.value)}
                 placeholder="8"
-                error={!!errors.myRating}
+                className={errors.myRating ? 'has-error' : undefined}
               />
               {errors.myRating && <span className="error-msg">{errors.myRating}</span>}
             </div>
@@ -445,7 +451,7 @@ export default function AccommodationFormPage() {
                 value={values.airbnbRating}
                 onChange={(e) => handleChange('airbnbRating', e.target.value)}
                 placeholder="4.5"
-                error={!!errors.airbnbRating}
+                className={errors.airbnbRating ? 'has-error' : undefined}
               />
               {errors.airbnbRating && <span className="error-msg">{errors.airbnbRating}</span>}
             </div>

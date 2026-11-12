@@ -20,6 +20,7 @@ export default function AccommodationsList() {
   const [filters, setFilters] = useState(EMPTY_FILTERS)
   const [sort, setSort] = useState('price-asc')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
 
   useEffect(() => {
     let ready = 0
@@ -27,18 +28,22 @@ export default function AccommodationsList() {
       ready += 1
       if (ready >= 3) setLoading(false)
     }
+    const onError = (error) => {
+      setLoadError(error)
+      setLoading(false)
+    }
     const unsubCities = observeCities((list) => {
       setCities(list)
       markReady()
-    })
+    }, onError)
     const unsubAccommodations = observeAccommodations((list) => {
       setAccommodations(list)
       markReady()
-    })
+    }, onError)
     const unsubStatuses = observeAccommodationStatuses((list) => {
       setStatuses(list)
       markReady()
-    })
+    }, onError)
     return () => {
       unsubCities()
       unsubAccommodations()
@@ -122,6 +127,13 @@ export default function AccommodationsList() {
           ← Volver a destinos
         </Link>
       </div>
+
+      {loadError && (
+        <div className="load-error" role="alert">
+          No se pudo conectar con Firestore. Revisá la conexión a internet y
+          recargá la página.
+        </div>
+      )}
 
       <FiltersPanel
         filters={filters}

@@ -34,7 +34,7 @@ export default function StatusTabs({
       <div className="status-tabs-list">
         <button
           type="button"
-          className={`status-tab ${activeTab === null ? 'active' : ''}`}
+          className={`status-tab status-tab--all ${activeTab === null ? 'active' : ''}`}
           onClick={() => setActiveTab(null)}
         >
           <span>Todos</span>
@@ -44,7 +44,7 @@ export default function StatusTabs({
           <button
             key={s.value}
             type="button"
-            className={`status-tab ${activeTab === s.value ? 'active' : ''}`}
+            className={`status-tab status-tab--${s.value} ${activeTab === s.value ? 'active' : ''}`}
             onClick={() => setActiveTab(s.value)}
           >
             <span className="status-tab-icon">{s.icon}</span>
@@ -74,7 +74,7 @@ export default function StatusTabs({
                       alt=""
                       loading="lazy"
                     />
-                    <span className="status-tab-badge">{statusLabel(status)}</span>
+                    <span className={`status-tab-badge status-tab-badge--${status}`}>{statusLabel(status)}</span>
                   </div>
                   <div className="status-tab-card-body">
                     <Link to={`/alojamientos/${a.id}`} className="status-tab-card-link">

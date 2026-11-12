@@ -28,18 +28,21 @@ const CITY_SCHEMA = {
 }
 
 const REGIONES = [
-  'Río de Janeiro',
-  'Buenos Aires', // no, Brasil. Quito.
   'Río de Janeiro (RJ)',
-  'Buzios (RJ)',
+  'Búzios (RJ)',
   'Arraial do Cabo (RJ)',
+  'Angra dos Reis (RJ)',
   'Florianópolis (SC)',
   'Bombinhas (SC)',
+  'Balneário Camboriú (SC)',
   'Porto de Galinhas (PE)',
+  'Recife (PE)',
   'Salvador (BA)',
   'Ilhéus (BA)',
   'Natal (RN)',
   'Fortaleza (CE)',
+  'João Pessoa (PB)',
+  'Maceió (AL)',
   'Otra',
 ]
 
@@ -105,13 +108,15 @@ export default function CityFormPage() {
       }
       if (isEdit) {
         await updateCity(id, payload)
+        navigate(`/ciudades/${id}`)
       } else {
-        await createCity(payload)
+        // createCity devuelve la referencia del documento nuevo: hay que
+        // navegar a su detalle (antes se volvía al mismo formulario).
+        const ref = await createCity(payload)
+        navigate(`/ciudades/${ref.id}`)
       }
-      setMessage(isEdit ? 'Ciudad actualizada.' : 'Ciudad creada.')
-      navigate(`/ciudades/${id || 'nuevo'}`)
     } catch (err) {
-      setMessage('Error al guardar la ciudad.')
+      setMessage('Error al guardar la ciudad. Revisá la conexión e intentá de nuevo.')
       console.error(err)
     } finally {
       setSaving(false)
@@ -143,7 +148,7 @@ export default function CityFormPage() {
             value={values.name}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="Río de Janeiro"
-            error={!!errors.name}
+            className={errors.name ? 'has-error' : undefined}
           />
           {errors.name && <span className="error-msg">{errors.name}</span>}
         </div>
@@ -154,7 +159,7 @@ export default function CityFormPage() {
             name="region"
             value={values.region}
             onChange={(e) => handleChange('region', e.target.value)}
-            error={!!errors.region}
+            className={errors.region ? 'has-error' : undefined}
           >
             <option value="">Seleccionar región</option>
             {REGIONES.map((r) => (
@@ -172,7 +177,7 @@ export default function CityFormPage() {
             onChange={(e) => handleChange('description', e.target.value)}
             rows={4}
             placeholder="Breve descripción de la ciudad para la familia."
-            error={!!errors.description}
+            className={errors.description ? 'has-error' : undefined}
           />
           {errors.description && <span className="error-msg">{errors.description}</span>}
         </div>
@@ -193,7 +198,7 @@ export default function CityFormPage() {
               value={values.lat}
               onChange={(e) => handleChange('lat', e.target.value)}
               placeholder="-22.9"
-              error={!!errors.lat}
+              className={errors.lat ? 'has-error' : undefined}
             />
             {errors.lat && <span className="error-msg">{errors.lat}</span>}
           </div>
@@ -206,7 +211,7 @@ export default function CityFormPage() {
               value={values.lng}
               onChange={(e) => handleChange('lng', e.target.value)}
               placeholder="-43.2"
-              error={!!errors.lng}
+              className={errors.lng ? 'has-error' : undefined}
             />
             {errors.lng && <span className="error-msg">{errors.lng}</span>}
           </div>

@@ -1,6 +1,6 @@
 /* Componentes: tarjetas, badges, formularios de imagen */
 
-/* StatusBadge */
+/* StatusBadge — cada estado tiene su propio color (--status-*) */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -8,6 +8,28 @@
   border-radius: 999px;
   font-weight: 700;
   white-space: nowrap;
+  border: 1px solid currentColor;
+}
+
+.status-badge-icon {
+  line-height: 1;
+}
+
+.status-badge--favorite {
+  color: var(--status-favorite);
+  background: color-mix(in srgb, var(--status-favorite) 12%, transparent);
+}
+
+.status-badge--pending {
+  color: var(--status-pending);
+  background: color-mix(in srgb, var(--status-pending) 14%, transparent);
+}
+
+.status-badge--discarded {
+  color: var(--status-discarded);
+  background: color-mix(in srgb, var(--status-discarded) 14%, transparent);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
 }
 
 /* ImageInput */
@@ -420,8 +442,9 @@
 }
 
 .accommodation-card-action.view:hover {
-  background: rgba(46, 125, 50, 0.2);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
   border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .accommodation-card-action.status {
@@ -508,6 +531,18 @@
 .filters-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.filters-count {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--accent-2);
+  background: color-mix(in srgb, var(--accent-2) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-2) 35%, transparent);
 }
 
 .btn-clear {
@@ -515,17 +550,18 @@
   font-weight: 600;
   padding: 8px 16px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface-hover);
-  color: var(--text-h);
+  border: 1px solid color-mix(in srgb, var(--accent-3) 40%, transparent);
+  background: color-mix(in srgb, var(--accent-3) 12%, transparent);
+  color: var(--accent-3);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-clear:hover {
-  border-color: var(--accent-border);
-  color: var(--accent);
-  background: var(--accent-soft);
+  background: var(--accent-3);
+  border-color: var(--accent-3);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .btn-clear svg {
@@ -588,14 +624,22 @@
 .status-tab:hover {
   border-color: var(--accent-border);
   color: var(--text-h);
+  transform: translateY(-1px);
 }
 
 .status-tab.active {
-  background: var(--accent);
   color: #ffffff;
-  border-color: var(--accent);
+  border-color: transparent;
   box-shadow: var(--shadow-soft);
 }
+
+/* Cada pestaña con su propio color al activarse */
+.status-tab--all.active { background: var(--grad-brand); }
+.status-tab--pending.active { background: linear-gradient(135deg, var(--status-pending), #ef4444); }
+.status-tab--favorite.active { background: linear-gradient(135deg, var(--status-pending), var(--status-favorite)); }
+.status-tab--discarded.active { background: linear-gradient(135deg, #475569, var(--status-discarded)); }
+
+.status-tab--pending .status-tab-icon { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15)); }
 
 .status-tab-icon {
   font-size: 16px;
@@ -657,11 +701,27 @@
   right: 8px;
   font-size: 11px;
   font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.7);
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.78);
   color: #ffffff;
   white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+
+.status-tab-badge--favorite {
+  background: linear-gradient(135deg, var(--status-favorite), #ff8fa3);
+  color: #ffffff;
+}
+
+.status-tab-badge--pending {
+  background: linear-gradient(135deg, var(--status-pending), #fbbf24);
+  color: #422006;
+}
+
+.status-tab-badge--discarded {
+  background: linear-gradient(135deg, #475569, var(--status-discarded));
+  color: #ffffff;
 }
 
 .status-tab-card-body {

@@ -21,6 +21,7 @@ export default function CityDetail() {
   const [filters, setFilters] = useState(EMPTY_FILTERS)
   const [sort, setSort] = useState('price-asc')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
 
   useEffect(() => {
     let ready = 0
@@ -28,18 +29,22 @@ export default function CityDetail() {
       ready += 1
       if (ready >= 3) setLoading(false)
     }
+    const onError = (error) => {
+      setLoadError(error)
+      setLoading(false)
+    }
     const unsubCities = observeCities((list) => {
       setCity(list.find((c) => c.id === id) || null)
       markReady()
-    })
+    }, onError)
     const unsubAccommodations = observeAccommodationsByCity(id, (list) => {
       setAccommodations(list)
       markReady()
-    })
+    }, onError)
     const unsubStatuses = observeAccommodationStatuses((list) => {
       setStatuses(list)
       markReady()
-    })
+    }, onError)
     return () => {
       unsubCities()
       unsubAccommodations()
@@ -103,6 +108,18 @@ export default function CityDetail() {
       <div className="list-page">
         <div className="list-header"><h1>Cargando ciudad…</h1></div>
         <div className="list-empty">Un momento.</div>
+      </div>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <div className="list-page">
+        <div className="list-header"><h1>Ciudad</h1></div>
+        <div className="load-error" role="alert">
+          No se pudo conectar con Firestore. Revisá la conexión a internet y
+          recargá la página.
+        </div>
       </div>
     )
   }

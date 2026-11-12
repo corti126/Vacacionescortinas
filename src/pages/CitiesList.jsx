@@ -16,11 +16,15 @@ export default function CitiesList() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const unsubCities = observeCities(setCities)
+    const onError = (error) => {
+      console.error(error)
+      setLoading(false)
+    }
+    const unsubCities = observeCities(setCities, onError)
     const unsubAccommodations = observeAccommodations((list) => {
       setAccommodations(list)
       setLoading(false)
-    })
+    }, onError)
     return () => {
       unsubCities()
       unsubAccommodations()

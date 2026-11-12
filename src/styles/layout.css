@@ -3,8 +3,22 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
+}
+
+/* Filete con el degradado de marca */
+.navbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--grad-brand);
+  opacity: 0.85;
 }
 
 .navbar-inner {
@@ -18,7 +32,7 @@
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-family: var(--heading);
   font-weight: 800;
   font-size: 20px;
@@ -30,9 +44,24 @@
   color: var(--accent);
 }
 
+.navbar-brand-text {
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .navbar-brand-icon {
-  font-size: 24px;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  border-radius: 11px;
+  background: var(--grad-brand-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: var(--shadow-soft);
 }
 
 .navbar-menu-button {
@@ -72,24 +101,27 @@
 }
 
 .navbar-link {
+  position: relative;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-soft);
   padding: 8px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   border: 1px solid transparent;
-  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.15s;
 }
 
 .navbar-link:hover {
   color: var(--text-h);
   background: var(--surface-hover);
+  transform: translateY(-1px);
 }
 
 .navbar-link.active {
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-color: var(--accent-border);
+  color: #ffffff;
+  background: var(--grad-brand);
+  border-color: transparent;
+  box-shadow: 0 6px 14px -6px color-mix(in srgb, var(--accent) 70%, transparent);
 }
 
 /* Selector de tema */
@@ -136,9 +168,9 @@
 }
 
 .navbar-theme-option.active {
-  background: var(--accent);
+  background: var(--grad-brand);
   color: #ffffff;
-  border-color: var(--accent);
+  border-color: transparent;
   box-shadow: var(--shadow-soft);
 }
 

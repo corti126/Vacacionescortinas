@@ -29,7 +29,7 @@ export default function Layout({ children }) {
         <div className="navbar-inner container">
           <Link to="/" className="navbar-brand" aria-label="Brasil Trip - inicio">
             <span className="navbar-brand-icon">🇧🇷</span>
-            Brasil Trip
+            <span className="navbar-brand-text">Brasil Trip</span>
           </Link>
 
           <button

@@ -52,12 +52,21 @@ service cloud.firestore {
     /* ---------- Estados familiares compartidos ---------- */
     /* Esta colección está separada de accommodations. Escribir aquí NO puede
        modificar otros campos de los alojamientos. Solo se permiten los campos
-       'status' y 'updatedAt', con un valor de status válido. */
+       'status' y 'updatedAt', con un valor de status válido.
+       (create/update van separados de delete: en un borrado no existe
+       request.resource.data, por lo que la validación no aplica.) */
     match /accommodationStatuses/{accommodationId} {
       allow read: if true;
-      allow write: if request.resource.data.keys().hasAll(['status', 'updatedAt'])
+      allow create: if request.resource.data.keys().hasAll(['status', 'updatedAt'])
         && request.resource.data.size() == 2
         && request.resource.data.status in ['pending', 'favorite', 'discarded'];
+      allow update: if request.resource.data.keys().hasAll(['status', 'updatedAt'])
+        && request.resource.data.size() == 2
+        && request.resource.data.status in ['pending', 'favorite', 'discarded'];
+      // Borrar el estado de un alojamiento eliminado (limpieza, no afecta
+      // otros documentos) es permitido; solo se puede borrar el documento
+      // de estados, nunca datos de otras colecciones.
+      allow delete: if true;
     }
   }
 }

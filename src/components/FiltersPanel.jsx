@@ -1,5 +1,4 @@
 /* Panel de filtros combinables y ordenamientos (requisito 11) */
-import { useState } from 'react'
 import {
   SORT_OPTIONS,
   STATUS_OPTIONS,
@@ -14,11 +13,9 @@ export default function FiltersPanel({
   cities = [],
   onClear,
 }) {
-  const [activeCount, setActiveCount] = useState(0)
-
   const isActive = () => {
     const f = filters
-    return (
+    return Boolean(
       f.cityId ||
       f.maxPrice ||
       f.maxDistance ||
@@ -28,15 +25,24 @@ export default function FiltersPanel({
       f.garage ||
       f.minRating ||
       f.status ||
-      sort !== 'price-asc'
+      sort !== 'price-asc',
     )
   }
 
-  // Recalcular cuántos filtros están activos (para el badge)
-  const prevActive = isActive()
-  if (prevActive !== activeCount) {
-    setActiveCount(prevActive ? 1 : 0)
-  }
+  /* Cantidad de filtros activos, calculada en cada render (sin setState
+     durante el render: eso provocaba un bucle infinito de re-render). */
+  const activeFilters = [
+    filters.cityId,
+    filters.maxPrice,
+    filters.maxDistance,
+    filters.minCapacity,
+    filters.minBedrooms,
+    filters.minRating,
+    filters.status,
+    filters.pool,
+    filters.garage,
+    sort !== 'price-asc',
+  ].filter(Boolean).length
 
   const handleClear = () => {
     onChangeFilters(EMPTY_FILTERS)
@@ -167,6 +173,9 @@ export default function FiltersPanel({
         </div>
 
         <div className="filters-actions">
+          {activeFilters > 0 && (
+            <span className="filters-count">{activeFilters} filtro{activeFilters !== 1 ? 's' : ''} activo{activeFilters !== 1 ? 's' : ''}</span>
+          )}
           {isActive() && (
             <button type="button" className="btn-clear" onClick={handleClear}>
               Limpiar filtros
