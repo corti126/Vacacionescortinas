@@ -477,3 +477,93 @@
 @media (max-width: 420px) {
   .filters-grid { grid-template-columns: 1fr; }
 }
+
+/* -------------------------- Calendario colapsable -------------------------- */
+.cal {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Botón disparador (estado cerrado) */
+.cal-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+  background: color-mix(in srgb, var(--sea) 6%, transparent);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  gap: 10px;
+}
+
+.cal-trigger:hover {
+  background: color-mix(in srgb, var(--sea) 12%, transparent);
+}
+
+.cal-trigger.open {
+  border-radius: 12px 12px 0 0;
+  background: var(--surface);
+  box-shadow: inset 0 -1px 0 var(--border);
+}
+
+.cal-trigger-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.cal-trigger-text {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cal-trigger-chevron {
+  font-size: 10px;
+  color: var(--text-soft);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+.cal-trigger.open .cal-trigger-chevron {
+  transform: rotate(180deg);
+}
+
+/* Panel desplegable */
+.cal-dropdown {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  animation: calDropdownIn 0.15s ease-out;
+}
+
+@keyframes calDropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* En móviles: dropdown a pantalla completa debajo del botón */
+@media (max-width: 420px) {
+  .cal-dropdown {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    top: auto;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-radius: 16px;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .cal-trigger.open { border-radius: 16px; }
+}

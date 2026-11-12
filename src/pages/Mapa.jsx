@@ -102,13 +102,25 @@ export default function Mapa() {
               <Marker key={city.id} position={[city.lat, city.lng]} icon={icon}>
                 <Popup>
                   <div className="map-popup">
-                    <Link to={`/ciudades/${city.id}`} className="map-popup-link">
-                      <h3>{city.name}</h3>
-                    </Link>
-                    {city.region && <div className="map-popup-region">{city.region}</div>}
-                    <div className="map-popup-count">
-                      {city.accommodationCount || 0} alojamiento
-                      {city.accommodationCount !== 1 ? 's' : ''}
+                    {city.coverImage && (
+                      <Link to={`/ciudades/${city.id}`} className="map-popup-image-link">
+                        <img
+                          src={city.coverImage}
+                          alt=""
+                          className="map-popup-image"
+                          loading="lazy"
+                        />
+                      </Link>
+                    )}
+                    <div className="map-popup-content">
+                      <Link to={`/ciudades/${city.id}`} className="map-popup-link">
+                        <h3>{city.name}</h3>
+                      </Link>
+                      {city.region && <div className="map-popup-region">{city.region}</div>}
+                      <div className="map-popup-count">
+                        {city.accommodationCount || 0} alojamiento
+                        {city.accommodationCount !== 1 ? 's' : ''}
+                      </div>
                     </div>
                   </div>
                 </Popup>

@@ -1,7 +1,6 @@
-/* Calendario inline para elegir un rango de fechas (llegada y salida).
-   Sin dependencias: renderiza dos meses y permite clickear los días.
-   El primer clic marca la llegada; el segundo, la salida (si se clickea
-   una fecha anterior, vuelve a empezar). */
+/* Calendario inline colapsable para elegir un rango de fechas.
+   Por defecto está cerrado; al clicar el botón se despliega.
+   Sin dependencias: renderiza dos meses y permite clickear los días. */
 import { useState } from 'react'
 import { parseISO, toISO, isValidISO, formatShort } from '../utils/dates'
 
@@ -9,7 +8,6 @@ const MONTH_NAMES = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
 ]
-// Semana empezando en lunes (formato habitual en español).
 const WEEKDAYS = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do']
 
 function MonthGrid({ year, month, from, to, onPick }) {
@@ -67,6 +65,7 @@ export default function DateRangeCalendar({ from = '', to = '', onChange }) {
     const base = isValidISO(from) ? parseISO(from) : new Date()
     return { y: base.getFullYear(), m: base.getMonth() }
   })
+  const [open, setOpen] = useState(false)
 
   const shift = (delta) =>
     setCursor(({ y, m }) => {
@@ -88,39 +87,59 @@ export default function DateRangeCalendar({ from = '', to = '', onChange }) {
 
   return (
     <div className="cal">
-      <div className="cal-toolbar">
-        <button
-          type="button"
-          className="cal-nav"
-          onClick={() => shift(-1)}
-          aria-label="Mes anterior"
-        >
-          ‹
-        </button>
-        <span className="cal-hint">{hint}</span>
-        <button
-          type="button"
-          className="cal-nav"
-          onClick={() => shift(1)}
-          aria-label="Mes siguiente"
-        >
-          ›
-        </button>
-      </div>
-      <div className="cal-months">
-        <MonthGrid year={cursor.y} month={cursor.m} from={from} to={to} onPick={pick} />
-        <MonthGrid
-          year={second.getFullYear()}
-          month={second.getMonth()}
-          from={from}
-          to={to}
-          onPick={pick}
-        />
-      </div>
-      <p className="cal-note">
-        Primer clic: llegada · Segundo clic: salida. Los alojamientos que no
-        tengan todos esos días libres no se muestran.
-      </p>
+      {/* Botón de disparo (estado cerrado) */}
+      <button
+        type="button"
+        className={`cal-trigger ${open ? 'open' : ''}`}
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-label="Abrir calendario de disponibilidad"
+      >
+        <span className="cal-trigger-icon" aria-hidden="true">📅</span>
+        <span className="cal-trigger-text">{hint}</span>
+        <span className="cal-trigger-chevron" aria-hidden="true">
+          {open ? '▲' : '▼'}
+        </span>
+      </button>
+
+      {/* Panel desplegable */}
+      {open && (
+        <div className="cal-dropdown" role="dialog" aria-label="Calendario de disponibilidad">
+          <div className="cal-toolbar">
+            <button
+              type="button"
+              className="cal-nav"
+              onClick={() => shift(-1)}
+              aria-label="Mes anterior"
+            >
+              ‹
+            </button>
+            <span className="cal-hint">{hint}</span>
+            <button
+              type="button"
+              className="cal-nav"
+              onClick={() => shift(1)}
+              aria-label="Mes siguiente"
+            >
+              ›
+            </button>
+          </div>
+          <div className="cal-months">
+            <MonthGrid year={cursor.y} month={cursor.m} from={from} to={to} onPick={pick} />
+            <MonthGrid
+              year={second.getFullYear()}
+              month={second.getMonth()}
+              from={from}
+              to={to}
+              onPick={pick}
+            />
+          </div>
+          <p className="cal-note">
+            Primer clic: llegada · Segundo clic: salida. Los alojamientos que no
+            tengan todos esos días libres no se muestran.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
