@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import { divIcon } from 'leaflet'
-import { observeCities } from '../services/firestore'
+import { observeCities, observeAccommodations } from '../services/firestore'
 import 'leaflet/dist/leaflet.css'
 import '../styles/map.css'
 
@@ -43,26 +43,48 @@ function MapSizeRefresher() {
 
 export default function Mapa() {
   const [cities, setCities] = useState([])
+  const [accommodations, setAccommodations] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
   const icon = useMemo(() => pinIcon(), [])
 
   useEffect(() => {
+    let ready = 0
+    const markReady = () => {
+      ready += 1
+      if (ready >= 2) setLoading(false)
+    }
+    const onError = (error) => {
+      setLoadError(error)
+      setLoading(false)
+    }
     const unsub = observeCities(
       (list) => {
         setCities(list)
         setLoadError(null)
-        setLoading(false)
+        markReady()
       },
-      (error) => {
-        setLoadError(error)
-        setLoading(false)
-      },
+      onError,
     )
-    return unsub
+    const unsubAcc = observeAccommodations(
+      (list) => {
+        setAccommodations(list)
+        markReady()
+      },
+      onError,
+    )
+    return () => {
+      unsub()
+      unsubAcc()
+    }
   }, [])
 
   const citiesWithCoords = cities.filter((c) => c.lat != null && c.lng != null)
+
+  const countsByCity = {}
+  for (const a of accommodations) {
+    countsByCity[a.cityId] = (countsByCity[a.cityId] || 0) + 1
+  }
 
   return (
     <div className="map-page">
@@ -118,8 +140,8 @@ export default function Mapa() {
                       </Link>
                       {city.region && <div className="map-popup-region">{city.region}</div>}
                       <div className="map-popup-count">
-                        {city.accommodationCount || 0} alojamiento
-                        {city.accommodationCount !== 1 ? 's' : ''}
+                        {countsByCity[city.id] || 0} alojamiento
+                        {(countsByCity[city.id] || 0) !== 1 ? 's' : ''}
                       </div>
                     </div>
                   </div>

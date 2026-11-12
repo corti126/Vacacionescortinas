@@ -95,6 +95,15 @@ export default function StatusTabs({
                         </span>
                       )}
                     </div>
+                    <div className="status-tab-card-meta">
+                      <span
+                        className="status-tab-card-rating"
+                        title={`Mi puntuación: ${a.myRating ?? 'sin puntaje'}/10`}
+                      >
+                        ⭐ {a.myRating ?? '—'}
+                        <span className="status-tab-card-rating-max">/10</span>
+                      </span>
+                    </div>
                     <div className="status-tab-card-actions">
                       <select
                         className="status-tab-status-select"

@@ -53,6 +53,11 @@ export default function Home() {
   }
   const counts = statusCounts(accommodations, statusesById)
 
+  const countsByCity = {}
+  for (const a of accommodations) {
+    countsByCity[a.cityId] = (countsByCity[a.cityId] || 0) + 1
+  }
+
   const quickAccess = [
     { to: '/ciudades', label: 'Todos los destinos', count: cities.length },
     { to: '/alojamientos', label: 'Todos los alojamientos', count: accommodations.length },
@@ -131,7 +136,9 @@ export default function Home() {
             </div>
           ) : (
             <div className="city-grid">
-              {cities.map((city) => (
+              {cities.map((city) => {
+                const count = countsByCity[city.id] || 0
+                return (
                 <Link key={city.id} to={`/ciudades/${city.id}`} className="city-card">
                   <div className="city-image">
                     <img
@@ -145,11 +152,11 @@ export default function Home() {
                     <p className="city-region">{city.region || ''}</p>
                     <p className="city-desc">{city.description || 'Sin descripción.'}</p>
                     <span className="city-count">
-                      {city.accommodationCount || 0} alojamiento{city.accommodationCount !== 1 ? 's' : ''}
+                      {count} alojamiento{count !== 1 ? 's' : ''}
                     </span>
                   </div>
                 </Link>
-              ))}
+              )})}
             </div>
           )}
         </div>

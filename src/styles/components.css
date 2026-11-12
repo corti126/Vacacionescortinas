@@ -686,6 +686,27 @@
   color: var(--text-soft);
 }
 
+.status-tab-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-tab-card-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--warning);
+}
+
+.status-tab-card-rating-max {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
 .status-tab-card-actions {
   margin-top: auto;
 }
