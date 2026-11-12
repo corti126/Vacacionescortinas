@@ -20,22 +20,70 @@
   margin: 0;
 }
 
+/* Esqueleto de carga */
+.map-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px 20px;
+  color: var(--text-soft);
+}
+
+.map-skeleton {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(90deg, var(--surface-hover) 25%, var(--border) 50%, var(--surface-hover) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-map {
+  height: 300px;
+  border-radius: var(--radius);
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Contenedor del mapa: altura fija inmediata para que Leaflet no colapse */
 .map-container {
+  min-height: 560px;
   height: 560px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-soft);
+  background: var(--surface-hover);
 }
 
 /* Forzar contenedor del mapa a 100% (leaflet lo necesita) */
 .map-container .leaflet-container {
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
 .map-popup {
   min-width: 220px;
+  font-family: var(--sans);
 }
 
 .map-popup-link {
@@ -71,6 +119,10 @@
   color: var(--text-soft);
 }
 
+.map-empty p {
+  margin: 0 0 10px;
+}
+
 .btn-primary-map {
   display: inline-flex;
   align-items: center;
@@ -91,5 +143,10 @@
 
 @media (max-width: 640px) {
   .map-page { padding: 16px 16px; }
-  .map-container { height: 400px; }
+  .map-container {
+    min-height: 400px;
+    height: 400px;
+  }
+  .map-loading { min-height: 320px; }
+  .skeleton-map { height: 240px; }
 }

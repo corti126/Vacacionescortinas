@@ -14,11 +14,11 @@ const NAV_ITEMS = [
   { to: '/admin', label: 'Administrar' },
 ]
 
-const THEME_LABELS = {
-  light: 'Claro',
-  dark: 'Oscuro',
-  auto: 'Automático',
-}
+const THEME_OPTIONS = [
+  { value: 'light', label: 'Claro', icon: '☀️' },
+  { value: 'dark', label: 'Oscuro', icon: '🌙' },
+  { value: 'auto', label: 'Auto', icon: '🔄' },
+]
 
 export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -30,7 +30,8 @@ export default function Layout({ children }) {
       <nav className="navbar">
         <div className="navbar-inner container">
           <Link to="/" className="navbar-brand" aria-label="Brasil Trip - inicio">
-            Brasil Trip 🇧🇷
+            <span className="navbar-brand-icon">🇧🇷</span>
+            Brasil Trip
           </Link>
 
           <button
@@ -39,7 +40,7 @@ export default function Layout({ children }) {
             aria-expanded={menuOpen}
             aria-label="Abrir menú"
           >
-            ☰
+            <span className="menu-icon">☰</span>
           </button>
 
           <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
@@ -55,18 +56,19 @@ export default function Layout({ children }) {
             ))}
 
             <div className="navbar-theme">
-              <span className="navbar-theme-title">Tema:</span>
+              <span className="navbar-theme-title">Tema</span>
               <div className="navbar-theme-select" role="radiogroup" aria-label="Seleccionar tema">
-                {['light', 'dark', 'auto'].map((value) => (
+                {THEME_OPTIONS.map((option) => (
                   <button
-                    key={value}
+                    key={option.value}
                     type="button"
                     role="radio"
-                    aria-checked={theme === value}
-                    className={`navbar-theme-option ${theme === value ? 'active' : ''}`}
-                    onClick={() => setTheme(value)}
+                    aria-checked={theme === option.value}
+                    className={`navbar-theme-option ${theme === option.value ? 'active' : ''}`}
+                    onClick={() => setTheme(option.value)}
                   >
-                    {THEME_LABELS[value]}
+                    <span className="theme-icon">{option.icon}</span>
+                    <span className="theme-text">{option.label}</span>
                   </button>
                 ))}
               </div>
