@@ -189,7 +189,26 @@ export default function AccommodationFormPage() {
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
-    const result = validateForm(values, ACCOM_SCHEMA)
+    // Si hay un borrador completo de fechas (Desde y Hasta elegidos pero sin
+    // tocar "+ Agregar rango"), se agrega automáticamente al guardar. Así
+    // no se pierden las fechas cargadas.
+    const draftValid =
+      rangeDraft.start &&
+      rangeDraft.end &&
+      rangeDraft.end >= rangeDraft.start
+    const draftPartial =
+      (rangeDraft.start && !rangeDraft.end) ||
+      (!rangeDraft.start && rangeDraft.end)
+    if (draftPartial) {
+      setRangeError('Elegí también la fecha "hasta" o tocá "+ Agregar rango" para guardarla.')
+      setMessage(null)
+      return
+    }
+    const mergedRanges = [
+      ...(values.availableRanges || []),
+      ...(draftValid ? [{ start: rangeDraft.start, end: rangeDraft.end }] : []),
+    ]
+    const result = validateForm({ ...values, availableRanges: mergedRanges }, ACCOM_SCHEMA)
     if (!result.valido) {
       setErrors(result.errores)
       setMessage(null)
@@ -219,9 +238,12 @@ export default function AccommodationFormPage() {
         notes: values.notes.trim(),
         coverImage: values.coverImage.trim(),
         images: (values.images || []).filter(Boolean),
-        availableRanges: (values.availableRanges || [])
-          .filter((r) => r && r.start && r.end)
-          .map((r) => ({ start: r.start, end: r.end })),
+        availableRanges: mergedRanges.filter((r) => r && r.start && r.end),
+      }
+      if (draftValid) {
+        // Deja el borrador en la lista visible también al usuario.
+        setValues((prev) => ({ ...prev, availableRanges: mergedRanges }))
+        setRangeDraft({ start: '', end: '' })
       }
       if (isEdit) {
         await updateAccommodation(id, payload)
@@ -237,7 +259,7 @@ export default function AccommodationFormPage() {
     } finally {
       setSaving(false)
     }
-  }, [values, isEdit, id, navigate, fromAdmin])
+  }, [values, isEdit, id, navigate, fromAdmin, rangeDraft])
 
   const cityOptions = cities.map((c) => ({ value: c.id, label: c.name }))
 
@@ -486,10 +508,12 @@ export default function AccommodationFormPage() {
         <fieldset className="form-fieldset">
           <legend className="form-legend">Días disponibles</legend>
           <p className="form-hint">
-            Cargá manualmente los rangos de fechas en los que el alojamiento
-            está libre. La familia podrá filtrar por fechas y solo verán
-            opciones que tengan <strong>todos</strong> los días elegidos
-            disponibles.
+            Elegí <strong>Desde</strong> y <strong>Hasta</strong> y tocá
+            “+ Agregar rango” para agregarlos a la lista. Si al final te
+            olvidás y guardás el alojamiento, el rango que hayas escrito
+            también se incorpora automáticamente. La familia podrá filtrar
+            por fechas y solo verá opciones libres en <strong>todos</strong>
+            los días elegidos.
           </p>
           <div className="availability-ranges">
             <div className="availability-ranges-list">

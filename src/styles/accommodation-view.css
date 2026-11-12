@@ -231,6 +231,13 @@
   margin: 0;
 }
 
+.view-availability-empty {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0;
+  font-style: italic;
+}
+
 /* Días disponibles */
 .view-availability h3 {
   font-size: 14px;

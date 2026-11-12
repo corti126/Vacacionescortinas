@@ -199,6 +199,11 @@ export default function AccommodationViewPage() {
               </ul>
             </div>
           )}
+          {availableRanges.length === 0 && (
+            <p className="view-availability-empty">
+              📅 Sin fechas de disponibilidad cargadas.
+            </p>
+          )}
 
           {accommodation.airbnbUrl && (
             <a
