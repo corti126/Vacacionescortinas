@@ -27,15 +27,6 @@ export default function Layout({ children }) {
             <span className="navbar-brand-text">Brasil Trip</span>
           </Link>
 
-          <button
-            className="navbar-menu-button"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-expanded={menuOpen}
-            aria-label="Abrir menú"
-          >
-            <span className="menu-icon">☰</span>
-          </button>
-
           <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
             {NAV_ITEMS.map((item) => (
               <Link
@@ -47,7 +38,9 @@ export default function Layout({ children }) {
                 {item.label}
               </Link>
             ))}
+          </div>
 
+          <div className="navbar-end">
             <button
               type="button"
               className="navbar-theme-toggle"
@@ -59,6 +52,15 @@ export default function Layout({ children }) {
               <span className="navbar-theme-toggle-icon" aria-hidden="true">
                 {resolvedTheme === 'dark' ? '☀️' : '🌙'}
               </span>
+            </button>
+
+            <button
+              className="navbar-menu-button"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-expanded={menuOpen}
+              aria-label="Abrir menú"
+            >
+              <span className="menu-icon">☰</span>
             </button>
           </div>
         </div>
