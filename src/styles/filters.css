@@ -217,7 +217,7 @@
   font-size: 14px;
 }
 
-.filter-input--prefix input { padding-left: 44px; }
+.filter-input--prefix input { padding-left: 30px; }
 .filter-input--suffix input { padding-right: 56px; }
 
 .filter-input-affix {

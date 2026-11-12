@@ -47,7 +47,7 @@ export default function FiltersPanel({
   if (filters.maxPrice)
     chips.push({
       key: 'maxPrice',
-      label: `Precio ≤ US$ ${filters.maxPrice}`,
+      label: `Precio ≤ $${filters.maxPrice}`,
       clear: () => set({ maxPrice: '' }),
     })
   if (filters.maxDistance)
@@ -166,7 +166,7 @@ export default function FiltersPanel({
           <div className="filter-field">
             <label htmlFor="filter-price">Precio máximo</label>
             <div className="filter-input filter-input--prefix">
-              <span className="filter-input-affix">US$</span>
+              <span className="filter-input-affix">$</span>
               <input
                 id="filter-price"
                 type="number"

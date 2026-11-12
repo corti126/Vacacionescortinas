@@ -1,10 +1,10 @@
-/* Listado de ciudades: ver, crear, editar, eliminar */
+/* Listado público de ciudades: solo lectura. Crear/editar/eliminar
+   vive en el panel de admin (/admin/ciudades). */
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   observeCities,
   observeAccommodations,
-  deleteCity,
 } from '../services/firestore'
 import CityCard from '../components/CityCard'
 import '../styles/lists.css'
@@ -13,7 +13,6 @@ export default function CitiesList() {
   const [cities, setCities] = useState([])
   const [accommodations, setAccommodations] = useState([])
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
 
   useEffect(() => {
     const onError = (error) => {
@@ -36,22 +35,11 @@ export default function CitiesList() {
     countsByCity[a.cityId] = (countsByCity[a.cityId] || 0) + 1
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar esta ciudad? Esta acción no se puede deshacer.')) return
-    try {
-      await deleteCity(id)
-    } catch (err) {
-      alert('No se pudo eliminar la ciudad.')
-      console.error(err)
-    }
-  }
-
   if (loading) {
     return (
       <div className="list-page">
         <div className="list-header">
           <h1>Ciudades</h1>
-          <Link to="/ciudades/nuevo" className="btn-primary">+ Nueva ciudad</Link>
         </div>
         <div className="list-empty">Cargando…</div>
       </div>
@@ -62,12 +50,12 @@ export default function CitiesList() {
     <div className="list-page">
       <div className="list-header">
         <h1>Ciudades</h1>
-        <Link to="/ciudades/nuevo" className="btn-primary">+ Nueva ciudad</Link>
+        <Link to="/mapa" className="btn-secondary">🗺️ Ver en el mapa</Link>
       </div>
 
       {cities.length === 0 ? (
         <div className="list-empty">
-          <p>Aún no hay ciudades cargadas. Creá la primera para empezar.</p>
+          <p>Aún no hay ciudades cargadas.</p>
         </div>
       ) : (
         <div className="city-list-grid">
@@ -75,8 +63,6 @@ export default function CitiesList() {
             <CityCard
               key={city.id}
               city={{ ...city, accommodationCount: countsByCity[city.id] || 0 }}
-              onEdit={() => navigate(`/ciudades/${city.id}/editar`)}
-              onDelete={() => handleDelete(city.id)}
             />
           ))}
         </div>

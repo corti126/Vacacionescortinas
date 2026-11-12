@@ -112,9 +112,6 @@ export default function CityDetail() {
       <div className="detail-header">
         <div className="detail-header-inner">
           <Link to="/ciudades" className="back-link">← Volver a ciudades</Link>
-          <div className="detail-actions">
-            <Link to={`/ciudades/${id}/editar`} className="btn-secondary">Editar ciudad</Link>
-          </div>
         </div>
         <div className="detail-cover">
           <img

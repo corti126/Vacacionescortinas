@@ -132,8 +132,9 @@ export default function Mapa() {
             <div className="map-overlay">
               <div className="map-overlay-card">
                 <p>Todavía no hay ciudades cargadas.</p>
-                <Link to="/ciudades/nuevo" className="btn-primary-map">
-                  Agregar primera ciudad
+                <p>Los destinos se crean desde el panel de Administración.</p>
+                <Link to="/admin" className="btn-primary-map">
+                  Ir a Administrar
                 </Link>
               </div>
             </div>

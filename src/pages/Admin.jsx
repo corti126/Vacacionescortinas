@@ -12,14 +12,18 @@ export default function Admin() {
         </p>
         <div className="admin-warning">
           ⚠️ Esta aplicación no tiene cuentas ni contraseñas. Quien tenga el enlace puede editar el contenido.
+          Las vistas públicas de la familia son de solo lectura.
         </div>
       </div>
 
       <div className="admin-grid">
-        <Link to="/ciudades" className="admin-card">
+        <Link to="/admin/ciudades" className="admin-card">
           <span className="admin-card-icon">🏙️</span>
           <h3>Ciudades</h3>
-          <p>Ver, crear, editar y eliminar ciudades (destinos).</p>
+          <p>
+            Crear, editar y eliminar los destinos (Río, Búzios, Florianópolis,
+            Maceió…), con sus coordenadas para el mapa.
+          </p>
         </Link>
         <Link to="/admin/alojamientos" className="admin-card">
           <span className="admin-card-icon">🏠</span>
@@ -39,7 +43,7 @@ export default function Admin() {
       <div className="admin-quick-create">
         <h2>Cargar contenido nuevo</h2>
         <div className="admin-quick-create-actions">
-          <Link to="/ciudades/nuevo" className="btn-primary">+ Nueva ciudad</Link>
+          <Link to="/admin/ciudades/nuevo" className="btn-primary">+ Nueva ciudad</Link>
           <Link to="/admin/alojamientos/nuevo" className="btn-primary">+ Nuevo alojamiento</Link>
         </div>
         <p className="admin-quick-create-hint">

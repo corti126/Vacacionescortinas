@@ -1,6 +1,6 @@
-/* Crear o editar una ciudad */
+/* Crear o editar una ciudad (solo desde /admin/ciudades). */
 import { useState, useEffect, useCallback } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, Link } from 'react-router-dom'
 import {
   createCity,
   updateCity,
@@ -50,8 +50,12 @@ const REGIONES = [
 
 export default function CityFormPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { id } = useParams()
   const isEdit = !!id
+  // La creación/edición vive en el panel de admin: después de guardar se
+  // vuelve a /admin/ciudades.
+  const fromAdmin = location.pathname.startsWith('/admin')
   const [city, setCity] = useState(null)
   const [values, setValues] = useState({
     name: '',
@@ -110,12 +114,12 @@ export default function CityFormPage() {
       }
       if (isEdit) {
         await updateCity(id, payload)
-        navigate(`/ciudades/${id}`)
+        navigate(fromAdmin ? '/admin/ciudades' : `/ciudades/${id}`)
       } else {
         // createCity devuelve la referencia del documento nuevo: hay que
         // navegar a su detalle (antes se volvía al mismo formulario).
         const ref = await createCity(payload)
-        navigate(`/ciudades/${ref.id}`)
+        navigate(fromAdmin ? '/admin/ciudades' : `/ciudades/${ref.id}`)
       }
     } catch (err) {
       setMessage('Error al guardar la ciudad. Revisá la conexión e intentá de nuevo.')
@@ -123,7 +127,7 @@ export default function CityFormPage() {
     } finally {
       setSaving(false)
     }
-  }, [values, isEdit, id, navigate])
+  }, [values, isEdit, id, navigate, fromAdmin])
 
   if (isEdit && !city) {
     return (
@@ -136,10 +140,15 @@ export default function CityFormPage() {
     )
   }
 
+  // Desde dónde se entró: admin devuelve al panel; si no, al listado público.
+  const backTo = fromAdmin ? '/admin/ciudades' : '/ciudades'
+
   return (
     <div className="form-page">
       <div className="form-header">
-        <Link to="/ciudades" className="back-link">← Volver a ciudades</Link>
+        <Link to={backTo} className="back-link">
+          ← Volver {fromAdmin ? 'al panel' : 'a ciudades'}
+        </Link>
         <h1>{isEdit ? 'Editar ciudad' : 'Nueva ciudad'}</h1>
       </div>
       <form className="form-card" onSubmit={handleSubmit}>
@@ -222,7 +231,7 @@ export default function CityFormPage() {
         {message && <div className={`message ${message.startsWith('Error') ? 'error' : 'success'}`}>{message}</div>}
 
         <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => navigate(isEdit ? `/ciudades/${id}` : '/ciudades')}>
+          <button type="button" className="btn-secondary" onClick={() => navigate(backTo)}>
             Cancelar
           </button>
           <button type="submit" className="btn-primary" disabled={saving}>

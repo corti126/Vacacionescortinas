@@ -25,7 +25,7 @@ const ACCOM_SCHEMA = {
   cityId: [required],
   name: [required, minLength(2), maxLength(150)],
   neighborhood: [required, minLength(2), maxLength(100)],
-  description: [required, minLength(5), maxLength(1000)],
+  description: [minLength(5), maxLength(1000)],
   airbnbUrl: [url],
   priceTotal: [required, minValue(1)],
   guestsForPrice: [required, minValue(1)],
@@ -323,7 +323,7 @@ export default function AccommodationFormPage() {
         </div>
 
         <div className="form-field">
-          <label>Descripción <span className="required">*</span></label>
+          <label>Descripción (opcional)</label>
           <textarea
             name="description"
             value={values.description}

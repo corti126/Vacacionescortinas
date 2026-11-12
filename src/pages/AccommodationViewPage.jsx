@@ -1,26 +1,29 @@
-/* Ficha individual de un alojamiento: galería, datos y estado familiar */
+/* Ficha individual de un alojamiento.
+   Diseño tipo "publicación": galería grande + panel resumen a la derecha;
+   detalles debajo en tarjetas. Solo muestra el estado familiar que la
+   familia comparte: editar/eliminar vive en el panel de administración. */
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
   getAccommodation,
   observeCities,
   observeAccommodationStatuses,
   setAccommodationStatus,
-  deleteAccommodation,
   ACCOMMODATION_STATUS,
 } from '../services/firestore'
 import StatusBadge from '../components/StatusBadge'
 import { formatPrice, pricePerPerson, ratingInterpretation } from '../utils/format'
+import { formatRange } from '../utils/dates'
 import '../styles/accommodation-view.css'
 
 export default function AccommodationViewPage() {
-  const navigate = useNavigate()
   const { id } = useParams()
   const [accommodation, setAccommodation] = useState(null)
   const [cities, setCities] = useState([])
   const [statuses, setStatuses] = useState([])
   const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState(false)
+  const [activeImage, setActiveImage] = useState(0)
+  const [loadError, setLoadError] = useState(null)
 
   useEffect(() => {
     let ready = 0
@@ -28,18 +31,27 @@ export default function AccommodationViewPage() {
       ready += 1
       if (ready >= 3) setLoading(false)
     }
-    getAccommodation(id).then((a) => {
-      setAccommodation(a)
-      markReady()
-    })
+    const onError = (error) => {
+      setLoadError(error)
+      setLoading(false)
+    }
+    getAccommodation(id)
+      .then((a) => {
+        setAccommodation(a)
+        markReady()
+      })
+      .catch((err) => {
+        console.error(err)
+        markReady()
+      })
     const unsubStatuses = observeAccommodationStatuses((list) => {
       setStatuses(list)
       markReady()
-    })
+    }, onError)
     const unsubCities = observeCities((list) => {
       setCities(list)
       markReady()
-    })
+    }, onError)
     return () => {
       unsubStatuses()
       unsubCities()
@@ -67,155 +79,144 @@ export default function AccommodationViewPage() {
   }, [accommodation])
 
   const features = []
-  if (accommodation?.pool) features.push('Piscina')
-  if (accommodation?.garage) features.push('Cochera')
-  if (accommodation?.grill) features.push('Parrilla')
-  if (accommodation?.airConditioning) features.push('Aire acondicionado')
+  if (accommodation?.pool) features.push({ icon: '🏊', label: 'Piscina' })
+  if (accommodation?.garage) features.push({ icon: '🅿️', label: 'Cochera' })
+  if (accommodation?.grill) features.push({ icon: '🍖', label: 'Parrilla' })
+  if (accommodation?.airConditioning) features.push({ icon: '❄️', label: 'Aire acondicionado' })
+
+  const availableRanges = (accommodation?.availableRanges || []).filter((r) => r?.start && r?.end)
 
   const handleSetStatus = async (next) => {
     await setAccommodationStatus(id, next)
   }
 
-  const handleDelete = async () => {
-    if (!window.confirm('¿Eliminar este alojamiento? Esta acción no se puede deshacer.'))
-      return
-    setDeleting(true)
-    try {
-      await deleteAccommodation(id)
-      navigate('/ciudades')
-    } catch (err) {
-      alert('No se pudo eliminar el alojamiento.')
-      console.error(err)
-    } finally {
-      setDeleting(false)
-    }
-  }
-
-  if (loading || !accommodation) {
+  if (loading || (!accommodation && !loadError)) {
     return (
       <div className="view-page">
-        <div className="view-header"><h1>Cargando alojamiento…</h1></div>
-        <div className="view-empty">Un momento.</div>
+        <div className="view-topbar">
+          <Link to="/alojamientos" className="view-back">← Volver</Link>
+        </div>
+        <div className="view-loading">
+          <div className="view-loading-skeleton view-loading-cover" />
+          <div className="view-loading-skeleton view-loading-lines" />
+        </div>
       </div>
     )
   }
 
-  return (
-    <div className="view-page">
-      <div className="view-header">
-        <Link to={city ? `/ciudades/${city.id}` : '/ciudades'} className="back-link">
-          ← Volver a {city ? city.name : 'ciudades'}
-        </Link>
-        <div className="view-actions">
-          <StatusBadge status={status} size="md" />
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => navigate(`/alojamientos/${id}/editar`)}
-          >
-            Editar
-          </button>
-          <button
-            type="button"
-            className="btn-danger"
-            onClick={handleDelete}
-            disabled={deleting}
-          >
-            {deleting ? 'Eliminando…' : 'Eliminar'}
-          </button>
+  if (loadError || !accommodation) {
+    return (
+      <div className="view-page">
+        <div className="view-topbar">
+          <Link to="/alojamientos" className="view-back">← Volver</Link>
+        </div>
+        <div className="view-empty">
+          <p>No se encontró el alojamiento o no se pudo conectar.</p>
+          <Link to="/alojamientos" className="btn-primary">Volver al listado</Link>
         </div>
       </div>
+    )
+  }
 
-      <div className="view-gallery">
-        {images.map((img, i) => (
-          <img key={i} src={img} alt="" className="view-gallery-img" />
-        ))}
-        {images.length === 0 && (
-          <div className="view-gallery-empty">Sin imágenes cargadas.</div>
-        )}
+  const showingImage = images[Math.min(activeImage, images.length - 1)]
+
+  return (
+    <div className="view-page">
+      {/* Barra superior */}
+      <div className="view-topbar">
+        <Link to={city ? `/ciudades/${city.id}` : '/ciudades'} className="view-back">
+          ← Volver a {city ? city.name : 'ciudades'}
+        </Link>
+        <StatusBadge status={status} size="md" />
       </div>
 
-      <div className="view-body">
-        <div className="view-main">
-          <h1>{accommodation.name}</h1>
-          <div className="view-location">
-            {city ? city.name : ''}
-            {accommodation.neighborhood && ` · ${accommodation.neighborhood}`}
+      {/* Hero: galería + resumen */}
+      <section className="view-hero">
+        <div className="view-gallery">
+          <div className="view-cover">
+            <img src={showingImage} alt="" className="view-cover-img" />
+            {images.length > 1 && (
+              <span className="view-cover-counter">
+                {Math.min(activeImage, images.length - 1) + 1} / {images.length}
+              </span>
+            )}
           </div>
-          <p className="view-desc">{accommodation.description || 'Sin descripción.'}</p>
+          {images.length > 1 && (
+            <div className="view-thumbs">
+              {images.map((img, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`view-thumb ${i === Math.min(activeImage, images.length - 1) ? 'active' : ''}`}
+                  onClick={() => setActiveImage(i)}
+                  aria-label={`Imagen ${i + 1}`}
+                  aria-current={i === Math.min(activeImage, images.length - 1)}
+                >
+                  <img src={img} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <aside className="view-summary">
+          <div>
+            <h1 className="view-name">{accommodation.name}</h1>
+            <p className="view-location">
+              📍 {city ? city.name : 'Ciudad sin nombre'}
+              {accommodation.neighborhood && ` · ${accommodation.neighborhood}`}
+            </p>
+            <div className="view-rating-line">
+              <span className="view-rating-badge">⭐ {accommodation.myRating ?? '—'}</span>
+              <span className="view-rating-text">
+                sobre 10 · {ratingInterpretation(accommodation.myRating)}
+              </span>
+            </div>
+          </div>
+
+          <div className="view-price-block">
+            <div className="view-price">{formatPrice(accommodation.priceTotal)}</div>
+            <div className="view-price-meta">
+              estadía completa · {formatPrice(ppp)} por persona
+            </div>
+            <div className="view-price-foot">
+              Para {accommodation.guestsForPrice || '-'} persona
+              {accommodation.guestsForPrice !== 1 ? 's' : ''}
+            </div>
+          </div>
+
+          {accommodation.distanceToBeach != null && (
+            <p className="view-beach">🏖️ A <strong>{accommodation.distanceToBeach} m</strong> de la playa</p>
+          )}
+
+          {availableRanges.length > 0 && (
+            <div className="view-availability">
+              <h3>📅 Días disponibles</h3>
+              <ul className="view-availability-list">
+                {availableRanges.map((r, i) => (
+                  <li key={i} className="view-availability-item">{formatRange(r)}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {accommodation.airbnbUrl && (
             <a
               href={accommodation.airbnbUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="view-airbnb"
+              className="view-airbnb-cta"
             >
-              Ver publicación original en Airbnb ↗
+              Ver y reservar en Airbnb ↗
             </a>
           )}
-        </div>
 
-        <div className="view-side">
-          <div className="view-card">
-            <h3>Precio</h3>
-            <p className="view-price">
-              {formatPrice(accommodation.priceTotal)}
-            </p>
-            {ppp != null && (
-              <p className="view-price-per">
-                {formatPrice(ppp)} por persona
-              </p>
-            )}
-            <p className="view-muted">
-              Para {accommodation.guestsForPrice || '-'} persona{accommodation.guestsForPrice !== 1 ? 's' : ''}
-            </p>
-            {accommodation.distanceToBeach != null && (
-              <p className="view-muted">🏖️ {accommodation.distanceToBeach} m a la playa</p>
-            )}
-          </div>
-
-          <div className="view-card">
-            <h3>Mi puntuación personal</h3>
-            <p className="view-rating">
-              {accommodation.myRating != null
-                ? `${accommodation.myRating}/10 — ${ratingInterpretation(accommodation.myRating)}`
-                : 'Sin puntuación'}
-            </p>
-            {accommodation.airbnbRating != null && (
-              <p className="view-muted">
-                Calificación Airbnb: {accommodation.airbnbRating}/5
-              </p>
-            )}
-          </div>
-
-          <div className="view-card">
-            <h3>Capacidad y espacios</h3>
-            <p className="view-muted">👥 {accommodation.capacity || '-'} huéspedes</p>
-            <p className="view-muted">🛏️ {accommodation.bedrooms || '-'} habitaciones</p>
-            <p className="view-muted">🚿 {accommodation.bathrooms || '-'} baños</p>
-          </div>
-
-          {features.length > 0 && (
-            <div className="view-card">
-              <h3>Características</h3>
-              <div className="view-features">
-                {features.map((f) => (
-                  <span key={f} className="feature-tag">{f}</span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {accommodation.notes && (
-            <div className="view-card">
-              <h3>Observaciones</h3>
-              <p className="view-notes">{accommodation.notes}</p>
-            </div>
-          )}
-
-          <div className="view-card">
-            <h3>Estado familiar</h3>
+          <div className="view-status-block">
+            <label className="view-status-label" htmlFor="view-status-select">
+              Estado familiar
+            </label>
             <select
+              id="view-status-select"
               value={status}
               onChange={(e) => handleSetStatus(e.target.value)}
               className="view-status-select"
@@ -224,12 +225,66 @@ export default function AccommodationViewPage() {
               <option value="favorite">❤️ Favorita</option>
               <option value="discarded">❌ Descartada</option>
             </select>
-            <p className="view-muted">
+            <p className="view-status-hint">
               Esta decisión la ven todos los familiares en tiempo real.
             </p>
           </div>
+        </aside>
+      </section>
+
+      {/* Detalles: estadísticas + contenido */}
+      <section className="view-content">
+        <div className="view-stats">
+          <div className="stat-card">
+            <span className="stat-icon">👥</span>
+            <span className="stat-value">{accommodation.capacity ?? '—'}</span>
+            <span className="stat-label">Huéspedes</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-icon">🛏️</span>
+            <span className="stat-value">{accommodation.bedrooms ?? '—'}</span>
+            <span className="stat-label">Habitaciones</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-icon">🚿</span>
+            <span className="stat-value">{accommodation.bathrooms ?? '—'}</span>
+            <span className="stat-label">Baños</span>
+          </div>
+          {features.map((f) => (
+            <div key={f.label} className="stat-card stat-card--feature">
+              <span className="stat-icon">{f.icon}</span>
+              <span className="stat-value stat-value--sm">Sí</span>
+              <span className="stat-label">{f.label}</span>
+            </div>
+          ))}
         </div>
-      </div>
+
+        <div className="view-content-grid">
+          {accommodation.description && (
+            <div className="view-card view-card--description">
+              <h2>Descripción</h2>
+              <p>{accommodation.description}</p>
+            </div>
+          )}
+
+          {accommodation.notes && (
+            <div className="view-card view-card--notes">
+              <h2>Observaciones</h2>
+              <p>{accommodation.notes}</p>
+            </div>
+          )}
+
+          {accommodation.airbnbRating != null && (
+            <div className="view-card view-card--rating">
+              <h2>Calificación Airbnb</h2>
+              <p className="view-airbnb-rating">
+                ⭐ {accommodation.airbnbRating}
+                <span className="view-airbnb-rating-max">/5</span>
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   )
 }

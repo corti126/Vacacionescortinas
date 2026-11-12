@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ACCOMMODATION_STATUS } from '../services/firestore'
-import { statusLabel } from '../utils/format'
+import { statusLabel, formatPrice, pricePerPerson } from '../utils/format'
 
 const STATUS_TABS = [
   { value: ACCOMMODATION_STATUS.PENDING, label: 'Pendientes', icon: '⏳' },
@@ -87,8 +87,13 @@ export default function StatusTabs({
                     </div>
                     <div className="status-tab-card-price">
                       <span className="status-tab-card-price-total">
-                        {a.priceTotal != null ? a.priceTotal : '—'}
+                        {a.priceTotal != null ? formatPrice(a.priceTotal) : '—'}
                       </span>
+                      {a.guestsForPrice != null && (
+                        <span className="status-tab-card-price-per">
+                          {formatPrice(pricePerPerson(a.priceTotal, a.guestsForPrice))} por persona
+                        </span>
+                      )}
                     </div>
                     <div className="status-tab-card-actions">
                       <select

@@ -30,6 +30,7 @@ const CityFormPage = lazy(() => import('./pages/CityFormPage'))
 const AccommodationFormPage = lazy(() => import('./pages/AccommodationFormPage'))
 const Admin = lazy(() => import('./pages/Admin'))
 const AdminAccommodations = lazy(() => import('./pages/AdminAccommodations'))
+const AdminCities = lazy(() => import('./pages/AdminCities'))
 
 function RouteFallback() {
   return (
@@ -50,16 +51,17 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/ciudades" element={<CitiesList />} />
-                <Route path="/ciudades/nuevo" element={<CityFormPage />} />
                 <Route path="/ciudades/:id" element={<CityDetail />} />
-                <Route path="/ciudades/:id/editar" element={<CityFormPage />} />
                 <Route path="/alojamientos" element={<AccommodationsList />} />
                 <Route path="/alojamientos/:id" element={<AccommodationViewPage />} />
                 <Route path="/mapa" element={<Mapa />} />
                 <Route path="/comparador" element={<Comparator />} />
-                {/* Administración de alojamientos: creación y edición SOLO
-                    desde el panel de admin (la pestaña pública es de lectura). */}
+                {/* Administración (crear / editar / eliminar ciudades y
+                    alojamientos): SOLO desde el panel de admin. */}
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/ciudades" element={<AdminCities />} />
+                <Route path="/admin/ciudades/nuevo" element={<CityFormPage />} />
+                <Route path="/admin/ciudades/:id/editar" element={<CityFormPage />} />
                 <Route path="/admin/alojamientos" element={<AdminAccommodations />} />
                 <Route path="/admin/alojamientos/nuevo" element={<AccommodationFormPage />} />
                 <Route path="/admin/alojamientos/:id/editar" element={<AccommodationFormPage />} />

@@ -459,6 +459,28 @@
 
 /* Filtros y ordenamiento: los estilos viven en styles/filters.css */
 
+.btn-danger {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--danger);
+  background: var(--danger);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 80%, #000);
+  transform: translateY(-1px);
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Selector de estado en tarjetas */
 .accommodation-card-action.status select {
   width: 100%;
@@ -657,6 +679,11 @@
   font-size: 17px;
   font-weight: 700;
   color: var(--text-h);
+}
+
+.status-tab-card-price-per {
+  font-size: 12px;
+  color: var(--text-soft);
 }
 
 .status-tab-card-actions {

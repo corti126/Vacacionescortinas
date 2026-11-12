@@ -1,7 +1,7 @@
-/* Tarjeta de ciudad */
+/* Tarjeta de ciudad (solo lectura: editar/eliminar vive en /admin/ciudades) */
 import { Link } from 'react-router-dom'
 
-export default function CityCard({ city, onEdit, onDelete }) {
+export default function CityCard({ city }) {
   return (
     <article className="city-card">
       <div className="city-card-image">
@@ -25,18 +25,6 @@ export default function CityCard({ city, onEdit, onDelete }) {
             {city.accommodationCount !== 1 ? 's' : ''}
           </span>
         </div>
-      </div>
-      <div className="city-card-actions">
-        {onEdit && (
-          <button type="button" className="city-card-action-btn edit" onClick={onEdit} title="Editar ciudad">
-            ✏️
-          </button>
-        )}
-        {onDelete && (
-          <button type="button" className="city-card-action-btn delete" onClick={onDelete} title="Eliminar ciudad">
-            🗑️
-          </button>
-        )}
       </div>
     </article>
   )
