@@ -1,4 +1,3 @@
-/* Tarjeta de alojamiento */
 import { Link } from 'react-router-dom'
 import { formatPrice, pricePerPerson } from '../utils/format'
 import StatusBadge from './StatusBadge'
