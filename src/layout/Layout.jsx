@@ -12,16 +12,11 @@ const NAV_ITEMS = [
   { to: '/admin', label: 'Administrar' },
 ]
 
-const THEME_OPTIONS = [
-  { value: 'light', label: 'Claro', icon: '☀️' },
-  { value: 'dark', label: 'Oscuro', icon: '🌙' },
-  { value: 'auto', label: 'Auto', icon: '🔄' },
-]
-
 export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const location = useLocation()
+  const toggleTheme = () => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
 
   return (
     <>
@@ -53,24 +48,18 @@ export default function Layout({ children }) {
               </Link>
             ))}
 
-            <div className="navbar-theme">
-              <span className="navbar-theme-title">Tema</span>
-              <div className="navbar-theme-select" role="radiogroup" aria-label="Seleccionar tema">
-                {THEME_OPTIONS.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    role="radio"
-                    aria-checked={theme === option.value}
-                    className={`navbar-theme-option ${theme === option.value ? 'active' : ''}`}
-                    onClick={() => setTheme(option.value)}
-                  >
-                    <span className="theme-icon">{option.icon}</span>
-                    <span className="theme-text">{option.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <button
+              type="button"
+              className="navbar-theme-toggle"
+              onClick={toggleTheme}
+              aria-pressed={resolvedTheme === 'dark'}
+              aria-label={resolvedTheme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+              title={resolvedTheme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+            >
+              <span className="navbar-theme-toggle-icon" aria-hidden="true">
+                {resolvedTheme === 'dark' ? '☀️' : '🌙'}
+              </span>
+            </button>
           </div>
         </div>
       </nav>

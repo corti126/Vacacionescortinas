@@ -1,12 +1,6 @@
 export const THEME_STORAGE_KEY = 'brasil-trip-theme'
 export const VALID_THEMES = ['light', 'dark', 'auto']
 
-export const THEME_LABELS = {
-  light: 'Claro',
-  dark: 'Oscuro',
-  auto: 'Automático',
-}
-
 export function getStoredTheme() {
   if (typeof window === 'undefined') return 'auto'
   const stored = localStorage.getItem(THEME_STORAGE_KEY)
