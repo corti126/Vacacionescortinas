@@ -6,7 +6,6 @@ import Home from './pages/Home'
 import CitiesList from './pages/CitiesList'
 import CityDetail from './pages/CityDetail'
 import Mapa from './pages/Mapa'
-import StatusList from './pages/StatusList'
 import AccommodationsList from './pages/AccommodationsList'
 import Comparator from './pages/Comparator'
 import AccommodationViewPage from './pages/AccommodationViewPage'
@@ -32,9 +31,6 @@ function App() {
               <Route path="/alojamientos/:id" element={<AccommodationViewPage />} />
               <Route path="/alojamientos/:id/editar" element={<AccommodationFormPage />} />
               <Route path="/mapa" element={<Mapa />} />
-              <Route path="/favoritos" element={<StatusList status="favorite" />} />
-              <Route path="/pendientes" element={<StatusList status="pending" />} />
-              <Route path="/descartados" element={<StatusList status="discarded" />} />
               <Route path="/comparador" element={<Comparator />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>

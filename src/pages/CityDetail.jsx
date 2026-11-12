@@ -1,4 +1,4 @@
-/* Detalle de una ciudad y sus alojamientos, con filtros y ordenamiento */
+/* Detalle de una ciudad y sus alojamientos, con filtros, ordenamiento y pestañas de estado */
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
@@ -9,11 +9,8 @@ import {
   ACCOMMODATION_STATUS,
 } from '../services/firestore'
 import FiltersPanel from '../components/FiltersPanel'
-import {
-  EMPTY_FILTERS,
-  SORT_OPTIONS,
-} from '../components/filtersConstants'
-import AccommodationList from '../components/AccommodationList'
+import { EMPTY_FILTERS, SORT_OPTIONS } from '../components/filtersConstants'
+import StatusTabs from '../components/StatusTabs'
 import '../styles/lists.css'
 
 export default function CityDetail() {
@@ -173,29 +170,14 @@ export default function CityDetail() {
         ordenado por: {sortLabel}
       </div>
 
-      {sorted.length === 0 ? (
-        <div className="list-empty">
-          <p>No hay alojamientos que coincidan con los filtros seleccionados.</p>
-          <button
-            type="button"
-            className="btn-primary-map"
-            onClick={() => {
-              setFilters(EMPTY_FILTERS)
-              setSort('price-asc')
-            }}
-          >
-            Limpiar filtros
-          </button>
-        </div>
-      ) : (
-        <AccommodationList
-          accommodations={sorted}
-          statusesById={statusesById}
-          onStatusChange={(accommodationId, nextStatus) =>
-            setAccommodationStatus(accommodationId, nextStatus)
-          }
-        />
-      )}
+      <StatusTabs
+        accommodations={sorted}
+        statusesById={statusesById}
+        citiesById={{ [city.id]: city }}
+        onStatusChange={(accommodationId, nextStatus) =>
+          setAccommodationStatus(accommodationId, nextStatus)
+        }
+      />
     </div>
   )
 }

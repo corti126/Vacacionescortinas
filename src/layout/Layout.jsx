@@ -6,9 +6,7 @@ import '../styles/layout.css'
 const NAV_ITEMS = [
   { to: '/', label: 'Inicio' },
   { to: '/ciudades', label: 'Destinos' },
-  { to: '/favoritos', label: 'Favoritas' },
-  { to: '/pendientes', label: 'Pendientes' },
-  { to: '/descartados', label: 'Descartadas' },
+  { to: '/alojamientos', label: 'Alojamientos' },
   { to: '/mapa', label: 'Mapa' },
   { to: '/comparador', label: 'Comparador' },
   { to: '/admin', label: 'Administrar' },

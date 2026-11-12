@@ -14,13 +14,12 @@ import '../styles/map.css'
 
 const CENTRO_BRASIL = [-14.235, -51.925]
 
-/* Forza a Leaflet a recalcular el tamaño cuando los marcadores cambian,
+/* Forza a Leaflet a recalcular el tamaño cuando el montaje termina,
    evitando que el mapa quede en blanco o mal centrado en producción. */
 function MapSizeRefresher() {
   const map = useMap()
   useEffect(() => {
-    const timer = setTimeout(() => map.invalidateSize(), 300)
-    return () => clearTimeout(timer)
+    map.invalidateSize()
   }, [map])
   return null
 }
@@ -83,7 +82,6 @@ export default function Mapa() {
           <MapContainer
             center={CENTRO_BRASIL}
             zoom={4}
-            zoomControl
             scrollWheelZoom={false}
           >
             <TileLayer

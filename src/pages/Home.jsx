@@ -50,9 +50,7 @@ export default function Home() {
 
   const quickAccess = [
     { to: '/ciudades', label: 'Todos los destinos', count: cities.length },
-    { to: '/favoritos', label: 'Favoritas', count: counts[ACCOMMODATION_STATUS.FAVORITE] },
-    { to: '/pendientes', label: 'Pendientes', count: counts[ACCOMMODATION_STATUS.PENDING] },
-    { to: '/descartados', label: 'Descartadas', count: counts[ACCOMMODATION_STATUS.DISCARDED] },
+    { to: '/alojamientos', label: 'Todos los alojamientos', count: accommodations.length },
     { to: '/mapa', label: 'Mapa de Brasil', count: null },
   ]
 

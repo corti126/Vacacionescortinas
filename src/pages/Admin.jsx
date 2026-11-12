@@ -1,5 +1,6 @@
 /* Panel de administración sencillo (sin autenticación, acceso por enlace) */
 import { Link } from 'react-router-dom'
+import '../styles/admin.css'
 
 export default function Admin() {
   return (
