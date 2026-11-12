@@ -1,4 +1,3 @@
-/* Lista presentacional de tarjetas de alojamiento */
 import AccommodationCard from './AccommodationCard'
 
 export default function AccommodationList({
