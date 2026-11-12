@@ -123,9 +123,14 @@ export default function AccommodationsList() {
     <div className="list-page">
       <div className="list-header">
         <h1>Alojamientos</h1>
-        <Link to="/ciudades" className="btn-secondary-link">
-          ← Volver a destinos
-        </Link>
+        <div className="list-header-actions">
+          <Link to="/ciudades" className="btn-secondary">
+            ← Destinos
+          </Link>
+          <Link to="/alojamientos/nuevo" className="btn-primary">
+            + Nuevo alojamiento
+          </Link>
+        </div>
       </div>
 
       {loadError && (
@@ -148,6 +153,30 @@ export default function AccommodationsList() {
         {' · '}
         ordenado por: {sortLabel}
       </div>
+
+      {accommodations.length === 0 && !loadError && (
+        <div className="list-cta" role="status">
+          <p className="list-cta-title">Todavía no hay alojamientos cargados.</p>
+          <p className="list-cta-text">
+            {cities.length === 0
+              ? 'Para cargar un alojamiento primero tenés que crear una ciudad (destino).'
+              : 'Cargá el primer alojamiento asignándole una de las ciudades creadas.'}
+          </p>
+          <div className="list-cta-actions">
+            {cities.length === 0 && (
+              <Link to="/ciudades/nuevo" className="btn-primary">
+                + Crear ciudad
+              </Link>
+            )}
+            <Link
+              to="/alojamientos/nuevo"
+              className={cities.length === 0 ? 'btn-secondary' : 'btn-primary'}
+            >
+              + Nuevo alojamiento
+            </Link>
+          </div>
+        </div>
+      )}
 
       <StatusTabs
         accommodations={sorted}

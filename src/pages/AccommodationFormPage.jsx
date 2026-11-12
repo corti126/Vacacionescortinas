@@ -32,9 +32,20 @@ const ACCOM_SCHEMA = {
   capacity: [minValue(1)],
   bedrooms: [minValue(0)],
   bathrooms: [minValue(0)],
-  myRating: [minValue(1), maxValue(10)],
+  myRating: [required, minValue(1), maxValue(10)],
   airbnbRating: [minValue(1), maxValue(5)],
   coverImage: [required, url],
+}
+
+// Interpretación del puntaje personal (1 a 10).
+function ratingLabel(value) {
+  const n = Number(value)
+  if (!value || !Number.isFinite(n)) return 'Elegí un puntaje del 1 al 10.'
+  if (n <= 3) return `${n}/10 · Poco interesante`
+  if (n <= 5) return `${n}/10 · Regular`
+  if (n <= 7) return `${n}/10 · Buena opción`
+  if (n <= 9) return `${n}/10 · Muy buena opción`
+  return '10/10 · Excelente opción'
 }
 
 export default function AccommodationFormPage() {
@@ -161,7 +172,7 @@ export default function AccommodationFormPage() {
         garage: !!values.garage,
         grill: !!values.grill,
         airConditioning: !!values.airConditioning,
-        myRating: values.myRating ? Number(values.myRating) : undefined,
+        myRating: Number(values.myRating),
         airbnbRating: values.airbnbRating ? Number(values.airbnbRating) : undefined,
         notes: values.notes.trim(),
         coverImage: values.coverImage.trim(),
@@ -198,10 +209,18 @@ export default function AccommodationFormPage() {
 
   const cityDisabled = isEdit || !!routeCityId
 
+  // Dónde volver: a la ficha del alojamiento (edición), a la ciudad desde la
+  // que se entró, o al listado global si se entró desde /alojamientos.
+  const backTo = isEdit
+    ? `/alojamientos/${id}`
+    : routeCityId
+      ? `/ciudades/${routeCityId}`
+      : '/alojamientos'
+
   return (
     <div className="form-page">
       <div className="form-header">
-        <Link to={isEdit ? `/alojamientos/${id}` : `/ciudades/${values.cityId || 'nuevo'}`} className="back-link">
+        <Link to={backTo} className="back-link">
           ← Volver
         </Link>
         <h1>{isEdit ? 'Editar alojamiento' : 'Nuevo alojamiento'}</h1>
@@ -224,6 +243,13 @@ export default function AccommodationFormPage() {
           {errors.cityId && <span className="error-msg">{errors.cityId}</span>}
           {cityDisabled && routeCityId && (
             <span className="image-input-hint">Ciudad preseleccionada desde el destino.</span>
+          )}
+          {!isEdit && cities.length === 0 && (
+            <span className="form-notice">
+              Todavía no hay ciudades creadas.{' '}
+              <Link to="/ciudades/nuevo">Creá una ciudad</Link> para poder
+              asignarle este alojamiento.
+            </span>
           )}
         </div>
 
@@ -426,18 +452,31 @@ export default function AccommodationFormPage() {
         <fieldset className="form-fieldset">
           <legend className="form-legend">Evaluación personal</legend>
           <div className="form-grid">
-            <div className="form-field">
-              <label>Mi puntuación (1 a 10)</label>
-              <input
-                name="myRating"
-                type="number"
-                min="1"
-                max="10"
-                value={values.myRating}
-                onChange={(e) => handleChange('myRating', e.target.value)}
-                placeholder="8"
-                className={errors.myRating ? 'has-error' : undefined}
-              />
+            <div className="form-field" style={{ gridColumn: '1 / -1' }}>
+              <label>
+                Mi puntuación (1 a 10) <span className="required">*</span>
+              </label>
+              <div className="rating-scale" role="radiogroup" aria-label="Mi puntuación">
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
+                  const active = Number(values.myRating) === n
+                  return (
+                    <button
+                      key={n}
+                      type="button"
+                      role="radio"
+                      aria-checked={active}
+                      aria-label={`Puntuación ${n} de 10`}
+                      className={`rating-scale-btn ${active ? 'active' : ''}`}
+                      onClick={() => handleChange('myRating', String(n))}
+                    >
+                      {n}
+                    </button>
+                  )
+                })}
+              </div>
+              <span className={`rating-hint ${values.myRating ? 'selected' : ''}`}>
+                {ratingLabel(values.myRating)}
+              </span>
               {errors.myRating && <span className="error-msg">{errors.myRating}</span>}
             </div>
             <div className="form-field">
@@ -487,7 +526,7 @@ export default function AccommodationFormPage() {
           <button
             type="button"
             className="btn-secondary"
-            onClick={() => navigate(isEdit ? `/ciudades/${values.cityId}` : '/ciudades')}
+            onClick={() => navigate(backTo)}
           >
             Cancelar
           </button>

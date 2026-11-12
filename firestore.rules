@@ -37,14 +37,21 @@ service cloud.firestore {
       allow read: if true;
       allow create: if request.resource.data.keys().hasAll([
         'name', 'cityId', 'neighborhood', 'description', 'priceTotal',
-        'currency', 'guestsForPrice', 'coverImage',
+        'currency', 'guestsForPrice', 'coverImage', 'myRating',
       ])
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0
         && request.resource.data.cityId is string
         && request.resource.data.cityId.size() > 0
         && request.resource.data.coverImage is string
-        && (request.resource.data.currency in ['USD', 'BRL']);
+        && (request.resource.data.currency in ['USD', 'BRL'])
+        // El alojamiento debe crearse SIEMPRE asignado a una ciudad que
+        // efectivamente exista en la colección cities.
+        && exists(/databases/$(database)/documents/cities/$(request.resource.data.cityId))
+        // "Mi puntuación" es obligatoria y está en la escala 1 a 10.
+        && request.resource.data.myRating is int
+        && request.resource.data.myRating >= 1
+        && request.resource.data.myRating <= 10;
       allow update: if true;
       allow delete: if true;
     }

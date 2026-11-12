@@ -25,6 +25,43 @@
   color: var(--text-soft);
 }
 
+.list-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Estado vacío del listado de alojamientos con accesos de carga */
+.list-cta {
+  margin-top: 8px;
+  padding: 24px;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.list-cta-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0 0 6px;
+}
+
+.list-cta-text {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin: 0 0 16px;
+}
+
+.list-cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .city-list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -125,6 +162,11 @@
 @media (max-width: 640px) {
   .list-page, .detail-page { padding: 16px 16px; }
   .list-header { flex-direction: column; align-items: flex-start; }
+  .list-header-actions { width: 100%; }
+  .list-header-actions .btn-primary,
+  .list-header-actions .btn-secondary { flex: 1 1 0; width: auto; }
+  .list-cta-actions .btn-primary,
+  .list-cta-actions .btn-secondary { width: auto; }
   .detail-actions { width: 100%; justify-content: space-between; }
   .btn-primary, .btn-secondary { width: 48%; }
   .detail-info h1 { font-size: 26px; }

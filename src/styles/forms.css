@@ -188,6 +188,69 @@ textarea.has-error:focus {
   color: var(--text-soft);
 }
 
+/* Aviso dentro de un formulario (ej.: falta crear una ciudad) */
+.form-notice {
+  display: block;
+  margin-top: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--text-soft);
+}
+
+.form-notice a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Selector visual de "Mi puntuación" (1 a 10) */
+.rating-scale {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rating-scale-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text-h);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s, background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.rating-scale-btn:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  transform: translateY(-1px);
+}
+
+.rating-scale-btn.active {
+  background: var(--grad-brand);
+  background-size: 160% 160%;
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--accent) 85%, transparent);
+}
+
+.rating-hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.rating-hint.selected {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 @media (max-width: 640px) {
   .form-page { padding: 16px 16px; }
   .form-card { padding: 16px; }

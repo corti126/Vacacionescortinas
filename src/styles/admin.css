@@ -71,7 +71,39 @@
   margin: 0;
 }
 
+/* Accesos directos de carga (ciudades y alojamientos) */
+.admin-quick-create {
+  margin-top: 28px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.admin-quick-create h2 {
+  font-size: 19px;
+  margin: 0 0 14px;
+  color: var(--text-h);
+}
+
+.admin-quick-create-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.admin-quick-create-hint {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-soft);
+  margin: 0;
+}
+
 @media (max-width: 640px) {
   .admin-page { padding: 20px 16px; }
   .admin-header h1 { font-size: 24px; }
+  .admin-quick-create { padding: 16px; }
+  .admin-quick-create-actions { flex-direction: column; }
+  .admin-quick-create-actions .btn-primary { width: 100%; justify-content: center; }
 }

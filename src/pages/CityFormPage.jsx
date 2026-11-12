@@ -20,7 +20,9 @@ import '../styles/forms.css'
 
 const CITY_SCHEMA = {
   name: [required, minLength(2), maxLength(100)],
-  description: [required, minLength(5), maxLength(500)],
+  // La descripción es opcional: si se deja vacía no se valida (minLength/maxLength
+  // ignoran los valores vacíos).
+  description: [minLength(5), maxLength(500)],
   region: [required],
   coverImage: [required, url],
   lat: [minValue(-90), maxValue(90)],
@@ -170,7 +172,7 @@ export default function CityFormPage() {
         </div>
 
         <div className="form-field">
-          <label>Descripción <span className="required">*</span></label>
+          <label>Descripción (opcional)</label>
           <textarea
             name="description"
             value={values.description}
