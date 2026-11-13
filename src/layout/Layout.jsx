@@ -23,7 +23,7 @@ export default function Layout({ children }) {
       <nav className="navbar">
         <div className="navbar-inner container">
           <Link to="/" className="navbar-brand" aria-label="Brasil Trip - inicio">
-            <span className="navbar-brand-icon">🇧🇷</span>
+            <img src="/logo-brasil.png" alt="Viaja Brasil" className="navbar-brand-icon" />
             <span className="navbar-brand-text">Brasil Trip</span>
           </Link>
 

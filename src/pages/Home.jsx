@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import heroImg from '../assets/hero.png'
 import {
   observeCities,
   observeAccommodations,
@@ -68,8 +67,8 @@ export default function Home() {
     <div className="home">
       <header className="home-hero">
         <div className="home-hero-content">
-          <img src={heroImg} alt="" className="home-hero-image" />
-          <h1>Brasil Trip 🇧🇷</h1>
+          <img src="/logo-brasil.png" alt="Viaja Brasil — Vacaciones soñadas" className="home-hero-image" />
+          <h1>Brasil Trip</h1>
           <p className="home-subtitle">Nuestro próximo viaje en familia.</p>
 
           {loadError && (
