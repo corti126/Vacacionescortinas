@@ -14,6 +14,7 @@ import {
 import StatusBadge from '../components/StatusBadge'
 import { formatPrice, pricePerPerson, ratingInterpretation } from '../utils/format'
 import { formatRange } from '../utils/dates'
+import { useComparator } from '../context/useComparator.js'
 import '../styles/accommodation-view.css'
 
 export default function AccommodationViewPage() {
@@ -24,6 +25,7 @@ export default function AccommodationViewPage() {
   const [loading, setLoading] = useState(true)
   const [activeImage, setActiveImage] = useState(0)
   const [loadError, setLoadError] = useState(null)
+  const { selected, toggle, isSelected, canAdd, max } = useComparator()
 
   useEffect(() => {
     let ready = 0
@@ -204,6 +206,23 @@ export default function AccommodationViewPage() {
               📅 Sin fechas de disponibilidad cargadas.
             </p>
           )}
+
+          {(() => {
+            const inCompare = isSelected(id)
+            const full = !inCompare && selected.length >= max
+            return (
+              <button
+                type="button"
+                className={`view-compare ${inCompare ? 'active' : ''}`}
+                onClick={() => toggle(id)}
+                disabled={!inCompare && !canAdd(id)}
+                title={full ? `Ya elegiste ${max} alojamientos para comparar` : undefined}
+                aria-pressed={inCompare}
+              >
+                {inCompare ? '✓ Quitar del comparador' : '⚖️ Agregar al comparador'}
+              </button>
+            )
+          })()}
 
           {accommodation.airbnbUrl && (
             <a

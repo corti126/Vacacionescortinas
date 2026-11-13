@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ACCOMMODATION_STATUS } from '../services/firestore'
 import { statusLabel, formatPrice, pricePerPerson } from '../utils/format'
+import { useComparator } from '../context/useComparator.js'
 
 const STATUS_TABS = [
   { value: ACCOMMODATION_STATUS.PENDING, label: 'Pendientes', icon: '⏳' },
@@ -18,6 +19,7 @@ export default function StatusTabs({
   onStatusChange,
 }) {
   const [activeTab, setActiveTab] = useState(null)
+  const { selected, toggle, isSelected, canAdd, max } = useComparator()
 
   const countByStatus = (status) =>
     accommodations.filter(
@@ -67,6 +69,7 @@ export default function StatusTabs({
             {filtered.map((a) => {
               const city = citiesById[a.cityId]
               const status = statusesById[a.id]?.status || ACCOMMODATION_STATUS.PENDING
+              const inCompare = isSelected(a.id)
               return (
                 <div key={a.id} className="status-tab-card">
                   <div className="status-tab-card-image">
@@ -115,6 +118,22 @@ export default function StatusTabs({
                         <option value="favorite">❤️ Favorita</option>
                         <option value="discarded">❌ Descartada</option>
                       </select>
+                      <button
+                        type="button"
+                        className={`status-tab-compare ${inCompare ? 'active' : ''}`}
+                        onClick={() => toggle(a.id)}
+                        disabled={!inCompare && !canAdd(a.id)}
+                        title={
+                          inCompare
+                            ? 'Quitar del comparador'
+                            : selected.length >= max
+                              ? `Máximo ${max} alojamientos para comparar`
+                              : 'Agregar al comparador'
+                        }
+                        aria-pressed={inCompare}
+                      >
+                        {inCompare ? '✓ Comparando' : '⚖️ Comparar'}
+                      </button>
                     </div>
                   </div>
                 </div>

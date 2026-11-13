@@ -283,6 +283,38 @@
   filter: brightness(1.06);
 }
 
+/* Botón agregar/quitar del comparador (panel resumen) */
+.view-compare {
+  display: block;
+  width: 100%;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-compare:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  transform: translateY(-1px);
+}
+
+.view-compare.active {
+  background: var(--grad-brand);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+
+.view-compare:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* Estado familiar */
 .view-status-label {
   display: block;
