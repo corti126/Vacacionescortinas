@@ -1,6 +1,6 @@
 /* Pestañas para filtrar alojamientos por estado familiar compartido */
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ACCOMMODATION_STATUS } from '../services/firestore'
 import { statusLabel, formatPrice, pricePerPerson } from '../utils/format'
 import { useComparator } from '../context/useComparator.js'
@@ -20,6 +20,7 @@ export default function StatusTabs({
 }) {
   const [activeTab, setActiveTab] = useState(null)
   const { selected, toggle, isSelected, canAdd, max } = useComparator()
+  const navigate = useNavigate()
 
   const countByStatus = (status) =>
     accommodations.filter(
@@ -70,9 +71,24 @@ export default function StatusTabs({
               const city = citiesById[a.cityId]
               const status = statusesById[a.id]?.status || ACCOMMODATION_STATUS.PENDING
               const inCompare = isSelected(a.id)
+              const goTo = () => navigate(`/alojamientos/${a.id}`)
               return (
-                <div key={a.id} className="status-tab-card">
-                  <div className="status-tab-card-image">
+                <div
+                  key={a.id}
+                  className="status-tab-card status-tab-card--interactive"
+                  role="link"
+                  tabIndex={0}
+                  aria-label={`Ver alojamiento: ${a.name}`}
+                  onClick={goTo}
+                  onKeyDown={(e) => {
+                    if (e.target !== e.currentTarget) return
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      goTo()
+                    }
+                  }}
+                >
+                  <div className="status-tab-card-image" aria-hidden="true">
                     <img
                       src={a.coverImage || 'https://images.unsplash.com/photo-1502672260266-1c1ef3d93668?q=80&w=800&auto=format&fit=crop'}
                       alt=""
@@ -81,9 +97,7 @@ export default function StatusTabs({
                     <span className={`status-tab-badge status-tab-badge--${status}`}>{statusLabel(status)}</span>
                   </div>
                   <div className="status-tab-card-body">
-                    <Link to={`/alojamientos/${a.id}`} className="status-tab-card-link">
-                      <h3>{a.name}</h3>
-                    </Link>
+                    <h3 className="status-tab-card-title">{a.name}</h3>
                     <div className="status-tab-card-location">
                       {city ? city.name : ''}
                       {a.neighborhood && ` · ${a.neighborhood}`}
@@ -107,7 +121,11 @@ export default function StatusTabs({
                         <span className="status-tab-card-rating-max">/10</span>
                       </span>
                     </div>
-                    <div className="status-tab-card-actions">
+                    <div
+                      className="status-tab-card-actions"
+                      onClick={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    >
                       <select
                         className="status-tab-status-select"
                         value={status}
