@@ -228,3 +228,201 @@
   .cmp-table th, .cmp-table td { padding: 10px 12px; }
   .cmp-accom-thumb { width: 44px; height: 44px; }
 }
+
+/* ============ Selector interactivo de alojamientos ============ */
+.cmp-picker {
+  margin-top: 24px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.cmp-picker-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.cmp-picker-head h2 {
+  font-size: 19px;
+  margin: 0 0 4px;
+}
+
+.cmp-picker-head p {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0;
+}
+
+.cmp-picker-head strong { color: var(--accent); }
+
+.cmp-picker-search-wrap {
+  position: relative;
+  min-width: 240px;
+  flex: 1 1 260px;
+  max-width: 360px;
+}
+
+.cmp-picker-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.cmp-picker-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px 10px 36px;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-h);
+}
+
+.cmp-picker-search:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.cmp-picker-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 15px;
+  padding: 28px 16px;
+}
+
+.cmp-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
+}
+
+.cmp-pick-card {
+  display: grid;
+  grid-template-columns: 74px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cmp-pick-card:hover {
+  border-color: var(--accent-border);
+}
+
+.cmp-pick-card.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.cmp-pick-thumb {
+  width: 74px;
+  height: 74px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.cmp-pick-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cmp-pick-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-h);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cmp-pick-city {
+  font-size: 12px;
+  color: var(--text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cmp-pick-price {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.cmp-pick-price-per {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.cmp-pick-rating {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--warning);
+}
+
+.cmp-pick-btn {
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.cmp-pick-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  transform: translateY(-1px);
+}
+
+.cmp-pick-btn.active {
+  background: var(--grad-brand);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+
+.cmp-pick-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .cmp-picker { padding: 14px; }
+  .cmp-picker-head { flex-direction: column; align-items: stretch; }
+  .cmp-picker-search-wrap { max-width: none; }
+  .cmp-picker-grid { grid-template-columns: 1fr; }
+  .cmp-pick-card {
+    grid-template-columns: 64px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .cmp-pick-thumb { width: 64px; height: 64px; grid-row: span 2; }
+  .cmp-pick-btn {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
