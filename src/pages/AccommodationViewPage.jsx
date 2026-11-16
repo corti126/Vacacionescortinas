@@ -14,6 +14,7 @@ import {
 import StatusBadge from '../components/StatusBadge'
 import { formatPrice, pricePerPerson, ratingInterpretation, formatDate } from '../utils/format'
 import { formatRange } from '../utils/dates'
+import { recifeInfo, isRecife } from '../utils/geo'
 import { useComparator } from '../context/useComparator.js'
 import '../styles/accommodation-view.css'
 import { onImgError } from '../utils/images'
@@ -278,6 +279,14 @@ export default function AccommodationViewPage() {
           {accommodation.distanceToBeach != null && (
             <p className="view-beach">🏖️ A <strong>{accommodation.distanceToBeach} m</strong> de la playa</p>
           )}
+          {(() => {
+            const r = recifeInfo(city)
+            return r ? (
+              <p className="view-recife" title="Distancia lineal desde el Aeropuerto de Recife y tiempo estimado en auto (aprox., ruta terrestre)">
+                {isRecife(city) ? '✈️ Base de llegada' : <>✈️ <strong>{r.kmText}</strong> · ~{r.timeText} de auto desde el aeropuerto de Recife</>}
+              </p>
+            ) : null
+          })()}
 
           {availableRanges.length > 0 && (
             <div className="view-availability">

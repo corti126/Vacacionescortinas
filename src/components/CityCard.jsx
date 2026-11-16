@@ -1,8 +1,10 @@
 /* Tarjeta de ciudad (solo lectura: editar/eliminar vive en /admin/ciudades) */
 import { Link } from 'react-router-dom'
+import { recifeInfo, isRecife } from '../utils/geo'
 import { onImgError } from '../utils/images'
 
 export default function CityCard({ city }) {
+  const recife = recifeInfo(city)
   return (
     <article className="city-card">
       <div className="city-card-image">
@@ -25,6 +27,11 @@ export default function CityCard({ city }) {
             {city.accommodationCount || 0} alojamiento
             {city.accommodationCount !== 1 ? 's' : ''}
           </span>
+          {recife && (
+            <span className="city-card-recife" title="Distancia lineal y tiempo estimado en auto desde el Aeropuerto de Recife">
+              {isRecife(city) ? '✈️ Base de llegada' : '✈️ ' + recife.kmText + ' · ~' + recife.timeText}
+            </span>
+          )}
         </div>
       </div>
     </article>

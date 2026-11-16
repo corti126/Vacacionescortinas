@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ACCOMMODATION_STATUS } from '../services/firestore'
 import { statusLabel, formatPrice, pricePerPerson } from '../utils/format'
+import { recifeInfo, isRecife } from '../utils/geo'
 import { useComparator } from '../context/useComparator.js'
 import { onImgError } from '../utils/images'
 
@@ -103,6 +104,14 @@ export default function StatusTabs({
                       {city ? city.name : ''}
                       {a.neighborhood && ` · ${a.neighborhood}`}
                     </div>
+                    {(() => {
+                      const r = recifeInfo(city)
+                      return r ? (
+                        <div className="status-tab-recife" title="Distancia lineal y tiempo estimado en auto desde el Aeropuerto de Recife (aprox.)">
+                          {isRecife(city) ? '✈️ Base de llegada' : '✈️ ' + r.kmText + ' · ~' + r.timeText + ' de Recife'}
+                        </div>
+                      ) : null
+                    })()}
                     <div className="status-tab-card-price">
                       <span className="status-tab-card-price-total">
                         {a.priceTotal != null ? formatPrice(a.priceTotal) : '—'}

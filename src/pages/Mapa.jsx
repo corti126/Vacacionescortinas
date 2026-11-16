@@ -7,6 +7,7 @@ import { observeCities, observeAccommodations } from '../services/firestore'
 import 'leaflet/dist/leaflet.css'
 import '../styles/map.css'
 import { onImgError } from '../utils/images'
+import { RECIFE_AIRPORT, distanceToRecifeKm, formatDistance, formatDriveTime, driveTimeMinutes, isRecife } from '../utils/geo'
 
 const CENTRO_BRASIL = [-14.235, -51.925]
 
@@ -19,6 +20,17 @@ function pinIcon() {
     iconSize: [28, 36],
     iconAnchor: [14, 34],
     popupAnchor: [0, -30],
+  })
+}
+
+/* Icono de avión para el aeropuerto de Recife (llegada del viaje). */
+function planeIcon() {
+  return divIcon({
+    className: 'map-plane-wrapper',
+    html: '<span class="map-plane">✈️</span>',
+    iconSize: [38, 38],
+    iconAnchor: [19, 19],
+    popupAnchor: [0, -20],
   })
 }
 
@@ -81,6 +93,8 @@ export default function Mapa() {
   }, [])
 
   const citiesWithCoords = cities.filter((c) => c.lat != null && c.lng != null)
+  const hasRecifeCity = cities.some(isRecife)
+  const airportIcon = useMemo(() => planeIcon(), [])
 
   const countsByCity = {}
   for (const a of accommodations) {
@@ -92,7 +106,7 @@ export default function Mapa() {
       <div className="map-header">
         <h1>Mapa de Brasil</h1>
         <p className="map-subtitle">
-          Ciudades registradas. Tocá un pino para ver detalles.
+          Ciudades registradas. ✈️ marca el aeropuerto de Recife (la llegada del viaje); tocá un pino para ver detalles.
         </p>
       </div>
 
@@ -121,8 +135,10 @@ export default function Mapa() {
               maxZoom={19}
             />
             <MapSizeRefresher />
-            {citiesWithCoords.map((city) => (
-              <Marker key={city.id} position={[city.lat, city.lng]} icon={icon}>
+            {citiesWithCoords.map((city) => {
+              const recife = isRecife(city)
+              return (
+              <Marker key={city.id} position={[city.lat, city.lng]} icon={recife ? airportIcon : icon}>
                 <Popup>
                   <div className="map-popup">
                     {city.coverImage && (
@@ -136,6 +152,7 @@ export default function Mapa() {
                       </Link>
                     )}
                     <div className="map-popup-content">
+                      {recife && <div className="map-popup-arrival">✈️ Arribo: aeropuerto</div>}
                       <Link to={`/ciudades/${city.id}`} className="map-popup-link">
                         <h3>{city.name}</h3>
                       </Link>
@@ -144,11 +161,39 @@ export default function Mapa() {
                         {countsByCity[city.id] || 0} alojamiento
                         {(countsByCity[city.id] || 0) !== 1 ? 's' : ''}
                       </div>
+                      {!recife && (() => {
+                        const km = distanceToRecifeKm(city)
+                        if (km == null) return null
+                        return (
+                          <div className="map-popup-recife">
+                            ✈️ {formatDistance(km)} · ~{formatDriveTime(driveTimeMinutes(km))} de Recife
+                          </div>
+                        )
+                      })()}
                     </div>
                   </div>
                 </Popup>
               </Marker>
-            ))}
+              )
+            })}
+            {!hasRecifeCity && (
+              <Marker
+                position={[RECIFE_AIRPORT.lat, RECIFE_AIRPORT.lng]}
+                icon={airportIcon}
+                title="Aeropuerto Internacional de Recife (REC)"
+              >
+                <Popup>
+                  <div className="map-popup map-popup--airport">
+                    <div className="map-popup-arrival">✈️ Llegada del viaje</div>
+                    <h3>{RECIFE_AIRPORT.name}</h3>
+                    <p className="view-muted">
+                      Todas las distancias y tiempos del sitio se calculan en línea recta
+                      y tiempo aprox. en auto desde este aeropuerto.
+                    </p>
+                  </div>
+                </Popup>
+              </Marker>
+            )}
           </MapContainer>
 
           {cities.length === 0 && (

@@ -231,3 +231,30 @@
   overflow: hidden;
   clip: rect(0 0 0 0);
 }
+
+/* Chip de distancia a Recife en detalle de ciudad */
+.detail-recife {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 4px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--sea) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sea) 32%, transparent);
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.detail-recife strong {
+  color: var(--sea);
+  font-weight: 800;
+}
+
+.detail-recife small {
+  opacity: 0.75;
+}
+
+.detail-recife-icon {
+  font-size: 20px;
+}

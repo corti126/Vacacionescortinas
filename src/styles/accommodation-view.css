@@ -559,3 +559,17 @@
   .view-thumbs { gap: 6px; }
   .view-thumb { flex-basis: 72px; height: 52px; }
 }
+
+/* Línea de distancia a Recife */
+.view-recife {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.view-recife strong {
+  color: var(--sea);
+}

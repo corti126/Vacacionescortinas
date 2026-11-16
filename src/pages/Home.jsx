@@ -8,6 +8,7 @@ import {
 } from '../services/firestore'
 import '../styles/home.css'
 import { onImgError } from '../utils/images'
+import { recifeInfo, isRecife } from '../utils/geo'
 
 const PLACEHOLDER_CITY =
   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1200&auto=format&fit=crop'
@@ -146,6 +147,7 @@ export default function Home() {
             <div className="city-grid">
               {cities.map((city) => {
                 const count = countsByCity[city.id] || 0
+                const recife = recifeInfo(city)
                 return (
                 <Link key={city.id} to={`/ciudades/${city.id}`} className="city-card">
                   <div className="city-image">
@@ -159,6 +161,11 @@ export default function Home() {
                     <h3>{city.name}</h3>
                     <p className="city-region">{city.region || ''}</p>
                     <p className="city-desc">{city.description || 'Sin descripción.'}</p>
+                    {recife && (
+                      <span className="city-card-recife" title="Distancia lineal y tiempo estimado en auto desde el Aeropuerto de Recife">
+                        {isRecife(city) ? '✈️ Base de llegada' : '✈️ ' + recife.kmText + ' · ~' + recife.timeText + ' desde Recife'}
+                      </span>
+                    )}
                     <span className="city-count">
                       {count} alojamiento{count !== 1 ? 's' : ''}
                     </span>

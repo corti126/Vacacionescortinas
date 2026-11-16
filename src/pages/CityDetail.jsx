@@ -15,6 +15,7 @@ import {
   filterAccommodations,
   sortAccommodations,
 } from '../utils/filterAccommodations'
+import { recifeInfo, isRecife } from '../utils/geo'
 import StatusTabs from '../components/StatusTabs'
 import ListSkeleton from '../components/ListSkeleton'
 import '../styles/lists.css'
@@ -108,6 +109,7 @@ export default function CityDetail() {
   }
 
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label || sort
+  const recife = recifeInfo(city)
 
   return (
     <div className="detail-page">
@@ -126,6 +128,16 @@ export default function CityDetail() {
           <h1>{city.name}</h1>
           {city.region && <span className="detail-region">{city.region}</span>}
           {city.description && <p className="detail-desc">{city.description}</p>}
+          {recife && (
+            <p className="detail-recife">
+              <span className="detail-recife-icon" aria-hidden="true">✈️</span>
+              <span>
+                {isRecife(city)
+                  ? 'Base de llegada: aterrizamos acá'
+                  : <><strong>{recife.kmText}</strong> · ~{recife.timeText} de auto desde el aeropuerto de Recife <small>(aprox., ruta terrestre)</small></>}
+              </span>
+            </p>
+          )}
           {(city.lat != null || city.lng != null) && (
             <p className="detail-coords">
               Coordenadas: {city.lat != null ? city.lat : '—'}, {city.lng != null ? city.lng : '—'}

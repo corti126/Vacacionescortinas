@@ -9,6 +9,7 @@ import {
 } from '../services/firestore'
 import { useComparator } from '../context/useComparator.js'
 import { formatPrice, pricePerPerson } from '../utils/format'
+import { recifeInfo } from '../utils/geo'
 import ListSkeleton from '../components/ListSkeleton'
 import '../styles/comparator.css'
 import { onImgError } from '../utils/images'
@@ -22,6 +23,8 @@ const ROWS = [
   { key: 'myRating', label: 'Mi puntuación personal' },
   { key: 'airbnbRating', label: 'Calificación Airbnb' },
   { key: 'distance', label: 'Distancia a la playa' },
+  { key: 'recifeDistance', label: 'Distancia a Recife (aeropuerto)' },
+  { key: 'recifeTime', label: 'Tiempo en auto a Recife (aprox.)' },
   { key: 'capacity', label: 'Capacidad' },
   { key: 'bedrooms', label: 'Habitaciones' },
   { key: 'bathrooms', label: 'Baños' },
@@ -309,6 +312,14 @@ function renderCell(citiesById, key, a) {
       )
     case 'distance':
       return <div className="cmp-cell-muted">{a.distanceToBeach != null ? a.distanceToBeach + ' m' : '—'}</div>
+    case 'recifeDistance': {
+      const r = recifeInfo(city)
+      return <div className="cmp-cell-muted">{r ? r.kmText : '—'}</div>
+    }
+    case 'recifeTime': {
+      const r = recifeInfo(city)
+      return <div className="cmp-cell-muted">{r ? `~${r.timeText}` : '—'}</div>
+    }
     case 'capacity':
       return <div className="cmp-cell-muted">{a.capacity != null ? a.capacity : '—'}</div>
     case 'bedrooms':

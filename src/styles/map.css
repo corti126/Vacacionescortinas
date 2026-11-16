@@ -224,3 +224,49 @@
   .map-loading { min-height: 320px; }
   .skeleton-map { height: 240px; }
 }
+
+/* Icono de avión para el aeropuerto de Recife */
+.map-plane-wrapper {
+  background: transparent;
+  border: none;
+}
+
+.map-plane {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  font-size: 19px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, var(--sun), var(--accent-3));
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
+  animation: pinDrop 0.35s ease-out;
+  user-select: none;
+}
+
+.map-popup-arrival {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #422006;
+  background: var(--sun);
+  border-radius: 999px;
+  padding: 3px 10px;
+  margin-bottom: 6px;
+}
+
+.map-popup--airport h3 {
+  font-size: 15px;
+  line-height: 1.35;
+  margin: 0 0 6px;
+}
+
+.map-popup-recife {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sea);
+  margin-top: 6px;
+}
