@@ -1,6 +1,7 @@
 /* Gestor de imágenes por URL: portada obligatoria + imágenes adicionales */
 import { useState } from 'react'
 import { url as validUrl } from '../utils/validation'
+import { onImgError } from '../utils/images'
 
 export default function ImageInput({
   value,           // { coverImage: string, images: string[] }
@@ -98,7 +99,7 @@ export default function ImageInput({
 
       {hasValidCover && (
         <div className="image-preview">
-          <img src={cover} alt="Portada" className="image-preview-thumb" />
+          <img onError={onImgError} src={cover} alt="Portada" className="image-preview-thumb" />
         </div>
       )}
     </div>

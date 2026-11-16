@@ -1,11 +1,12 @@
 /* Tarjeta de ciudad (solo lectura: editar/eliminar vive en /admin/ciudades) */
 import { Link } from 'react-router-dom'
+import { onImgError } from '../utils/images'
 
 export default function CityCard({ city }) {
   return (
     <article className="city-card">
       <div className="city-card-image">
-        <img
+        <img onError={onImgError}
           src={city.coverImage || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800&auto=format&fit=crop'}
           alt=""
           loading="lazy"

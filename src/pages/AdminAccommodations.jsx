@@ -11,6 +11,8 @@ import {
 import { formatPrice, pricePerPerson, ratingInterpretation } from '../utils/format'
 import { formatRange } from '../utils/dates'
 import '../styles/admin.css'
+import ListSkeleton from '../components/ListSkeleton'
+import { onImgError } from '../utils/images'
 
 export default function AdminAccommodations() {
   const navigate = useNavigate()
@@ -83,7 +85,7 @@ export default function AdminAccommodations() {
         </div>
       )}
 
-      {loading && <div className="list-empty">Cargando alojamientos…</div>}
+      {loading && <ListSkeleton cards={6} />}
 
       {!loading && !loadError && accommodations.length === 0 && (
         <div className="list-empty">
@@ -105,7 +107,7 @@ export default function AdminAccommodations() {
             const ranges = (a.availableRanges || []).filter((r) => r?.start)
             return (
               <li key={a.id} className="admin-acc-row">
-                <img
+                <img onError={onImgError}
                   className="admin-acc-thumb"
                   src={a.coverImage || 'https://images.unsplash.com/photo-1502672260266-1c1ef3d93668?q=80&w=400&auto=format&fit=crop'}
                   alt=""

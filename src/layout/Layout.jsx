@@ -20,10 +20,11 @@ export default function Layout({ children }) {
 
   return (
     <>
+      <a className="skip-link" href="#contenido">Saltar al contenido</a>
       <nav className="navbar">
         <div className="navbar-inner container">
           <Link to="/" className="navbar-brand" aria-label="Brasil Trip - inicio">
-            <img src="/logo-brasil.png" alt="Viaja Brasil" className="navbar-brand-icon" />
+            <img src="/logo-192.png" alt="Viaja Brasil" className="navbar-brand-icon" width="40" height="40" />
             <span className="navbar-brand-text">Brasil Trip</span>
           </Link>
 
@@ -66,7 +67,7 @@ export default function Layout({ children }) {
         </div>
       </nav>
 
-      <main className="page">{children}</main>
+      <main id="contenido" className="page">{children}</main>
 
       <footer className="footer">
         <div className="footer-inner container">

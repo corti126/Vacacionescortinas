@@ -310,6 +310,16 @@
   font-style: italic;
 }
 
+.view-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 12px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
 /* Días disponibles */
 .view-availability h3 {
   font-size: 14px;

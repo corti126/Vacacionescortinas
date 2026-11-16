@@ -9,7 +9,9 @@ import {
 } from '../services/firestore'
 import { useComparator } from '../context/useComparator.js'
 import { formatPrice, pricePerPerson } from '../utils/format'
+import ListSkeleton from '../components/ListSkeleton'
 import '../styles/comparator.css'
+import { onImgError } from '../utils/images'
 
 const ROWS = [
   { key: 'photo', label: 'Fotografía' },
@@ -111,7 +113,7 @@ export default function Comparator() {
         )}
       </div>
 
-      {loading && <div className="cmp-empty">Cargando alojamientos…</div>}
+      {loading && <ListSkeleton cards={4} />}
 
       {/* Tabla comparativa: solo si hay al menos uno elegido */}
       {!loading && compared.length > 0 && (
@@ -123,7 +125,7 @@ export default function Comparator() {
                 {compared.map((a) => (
                   <td key={a.id} className="cmp-accom-cell">
                     <div className="cmp-accom-header">
-                      <img
+                      <img onError={onImgError}
                         src={a.coverImage || 'https://images.unsplash.com/photo-1502672260266-1c1ef3d93668?q=80&w=400&auto=format&fit=crop'}
                         alt=""
                         className="cmp-accom-thumb"
@@ -212,7 +214,7 @@ export default function Comparator() {
                   key={a.id}
                   className={`cmp-pick-card ${chosen ? 'active' : ''}`}
                 >
-                  <img
+                  <img onError={onImgError}
                     src={a.coverImage || 'https://images.unsplash.com/photo-1502672260266-1c1ef3d93668?q=80&w=300&auto=format&fit=crop'}
                     alt=""
                     className="cmp-pick-thumb"
@@ -269,7 +271,7 @@ function renderCell(citiesById, key, a) {
     case 'photo':
       return (
         <div className="cmp-cell-photo">
-          <img
+          <img onError={onImgError}
             src={a.coverImage || 'https://images.unsplash.com/photo-1502672260266-1c1ef3d93668?q=80&w=300&auto=format&fit=crop'}
             alt=""
             className="cmp-cell-thumb"

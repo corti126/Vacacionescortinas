@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import { ComparatorProvider } from './context/ComparatorContext.jsx'
 import Layout from './layout/Layout'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 
 // Hoja de estilo única y ordenada: si se carga una página directamente (o por
 // code splitting), todos los estilos globales ya están disponibles.
@@ -46,9 +47,10 @@ function App() {
     <ThemeProvider>
       <ComparatorProvider>
         <BrowserRouter>
-          <Layout>
-            <Suspense fallback={<RouteFallback />}>
-              <Routes>
+          <ErrorBoundary>
+            <Layout>
+              <Suspense fallback={<RouteFallback />}>
+                <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/ciudades" element={<CitiesList />} />
                 <Route path="/ciudades/:id" element={<CityDetail />} />
@@ -66,9 +68,10 @@ function App() {
                 <Route path="/admin/alojamientos/nuevo" element={<AccommodationFormPage />} />
                 <Route path="/admin/alojamientos/:id/editar" element={<AccommodationFormPage />} />
                 <Route path="*" element={<Home />} />
-              </Routes>
-            </Suspense>
-          </Layout>
+                </Routes>
+              </Suspense>
+            </Layout>
+          </ErrorBoundary>
         </BrowserRouter>
       </ComparatorProvider>
     </ThemeProvider>

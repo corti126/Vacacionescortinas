@@ -26,6 +26,27 @@ export function statusLabel(status) {
   return labels[status] || 'Pendiente'
 }
 
+// Formatea timestamps de Firestore / Date / strings a "12 de Noviembre de 2026"
+export function formatDate(value, style = 'long') {
+  if (!value) return null
+  let date = null
+  // Timestamp de Firestore (tiene método toDate())
+  if (typeof value.toDate === 'function') {
+    date = value.toDate()
+  } else if (value instanceof Date) {
+    date = value
+  } else {
+    const d = new Date(value)
+    if (!Number.isNaN(d.getTime())) date = d
+  }
+  if (!date) return null
+  return new Intl.DateTimeFormat('es-AR', {
+    day: 'numeric',
+    month: style === 'short' ? 'short' : 'long',
+    year: 'numeric',
+  }).format(date)
+}
+
 export function ratingInterpretation(rating) {
   const n = Number(rating)
   if (!Number.isFinite(n)) return ''

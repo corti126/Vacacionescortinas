@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { ACCOMMODATION_STATUS } from '../services/firestore'
 import { statusLabel, formatPrice, pricePerPerson } from '../utils/format'
 import { useComparator } from '../context/useComparator.js'
+import { onImgError } from '../utils/images'
 
 const STATUS_TABS = [
   { value: ACCOMMODATION_STATUS.PENDING, label: 'Pendientes', icon: '⏳' },
@@ -89,7 +90,7 @@ export default function StatusTabs({
                   }}
                 >
                   <div className="status-tab-card-image" aria-hidden="true">
-                    <img
+                    <img onError={onImgError}
                       src={a.coverImage || 'https://images.unsplash.com/photo-1502672260266-1c1ef3d93668?q=80&w=800&auto=format&fit=crop'}
                       alt=""
                       loading="lazy"

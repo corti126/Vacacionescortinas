@@ -7,6 +7,7 @@ import {
   ACCOMMODATION_STATUS,
 } from '../services/firestore'
 import '../styles/home.css'
+import { onImgError } from '../utils/images'
 
 const PLACEHOLDER_CITY =
   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1200&auto=format&fit=crop'
@@ -67,9 +68,17 @@ export default function Home() {
     <div className="home">
       <header className="home-hero">
         <div className="home-hero-content">
-          <img src="/logo-brasil.png" alt="Viaja Brasil — Vacaciones soñadas" className="home-hero-image" />
+          <img onError={onImgError} src="/logo-192.png" alt="Viaja Brasil — Vacaciones soñadas" className="home-hero-image" width="172" height="172" />
           <h1>Brasil Trip</h1>
           <p className="home-subtitle">Nuestro próximo viaje en familia.</p>
+          <div className="home-cta">
+            <Link to="/alojamientos" className="home-cta-btn home-cta-btn--primary">
+              🏠 Explorar alojamientos
+            </Link>
+            <Link to="/mapa" className="home-cta-btn home-cta-btn--ghost">
+              🗺️ Ver el mapa
+            </Link>
+          </div>
 
           {loadError && (
             <div className="load-error" role="alert">
@@ -140,7 +149,7 @@ export default function Home() {
                 return (
                 <Link key={city.id} to={`/ciudades/${city.id}`} className="city-card">
                   <div className="city-image">
-                    <img
+                    <img onError={onImgError}
                       src={city.coverImage || PLACEHOLDER_CITY}
                       alt=""
                       loading="lazy"

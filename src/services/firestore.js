@@ -114,20 +114,43 @@ export async function getAccommodation(id) {
   return s.exists() ? { id: s.id, ...s.data() } : null
 }
 
+// Suscripción en tiempo real a UN alojamiento (la ficha no se queda vieja:
+// si otro familiar edita precio/imágenes desde el panel, se actualiza en vivo).
+export function observeAccommodationById(id, callback, onError) {
+  return onSnapshot(
+    doc(db, ACCOMMODATIONS_COLLECTION, id),
+    (snap) => callback(snap.exists() ? { id: snap.id, ...snap.data() } : null),
+    (error) => {
+      console.error('[Firestore] Error escuchando el alojamiento:', error)
+      if (onError) onError(error)
+    },
+  )
+}
+
 export function observeAccommodations(callback, onError) {
   const q = query(collection(db, ACCOMMODATIONS_COLLECTION), orderBy('createdAt', 'desc'))
   return subscribe(q, byId, callback, onError)
 }
 
 export function observeAccommodationsByCity(cityId, callback, onError) {
+  // where en el servidor (antes se descargaba todo y se filtraba en el
+  // cliente). Se ordena acá con sort para NO requerir índice compuesto
+  // (where == + orderBy sobre otro campo lo exige).
   const q = query(
     collection(db, ACCOMMODATIONS_COLLECTION),
-    orderBy('createdAt', 'desc'),
+    where('cityId', '==', cityId),
   )
   return subscribe(
     q,
     byId,
-    (list) => callback(list.filter((a) => a.cityId === cityId)),
+    (list) => {
+      const sorted = [...list].sort((a, b) => {
+        const at = a.createdAt?.seconds ?? 0
+        const bt = b.createdAt?.seconds ?? 0
+        return bt - at
+      })
+      callback(sorted)
+    },
     onError,
   )
 }

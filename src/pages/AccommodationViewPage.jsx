@@ -5,17 +5,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
-  getAccommodation,
+  observeAccommodationById,
   observeCities,
   observeAccommodationStatuses,
   setAccommodationStatus,
   ACCOMMODATION_STATUS,
 } from '../services/firestore'
 import StatusBadge from '../components/StatusBadge'
-import { formatPrice, pricePerPerson, ratingInterpretation } from '../utils/format'
+import { formatPrice, pricePerPerson, ratingInterpretation, formatDate } from '../utils/format'
 import { formatRange } from '../utils/dates'
 import { useComparator } from '../context/useComparator.js'
 import '../styles/accommodation-view.css'
+import { onImgError } from '../utils/images'
 
 export default function AccommodationViewPage() {
   const { id } = useParams()
@@ -38,15 +39,18 @@ export default function AccommodationViewPage() {
       setLoadError(error)
       setLoading(false)
     }
-    getAccommodation(id)
-      .then((a) => {
+    const unsubDoc = observeAccommodationById(
+      id,
+      (a) => {
         setAccommodation(a)
         markReady()
-      })
-      .catch((err) => {
-        console.error(err)
+      },
+      (error) => {
+        console.error(error)
+        setLoadError(error)
         markReady()
-      })
+      },
+    )
     const unsubStatuses = observeAccommodationStatuses((list) => {
       setStatuses(list)
       markReady()
@@ -56,6 +60,7 @@ export default function AccommodationViewPage() {
       markReady()
     }, onError)
     return () => {
+      unsubDoc()
       unsubStatuses()
       unsubCities()
     }
@@ -80,6 +85,20 @@ export default function AccommodationViewPage() {
     if (accommodation?.images) imgs.push(...accommodation.images)
     return imgs.filter(Boolean)
   }, [accommodation])
+
+  const currentIndex = Math.min(
+    Math.max(activeImage || 0, 0),
+    Math.max(images.length - 1, 0),
+  )
+
+  // Precarga las fotos adyacentes para que pasar con las flechas sea instantáneo.
+  useEffect(() => {
+    if (images.length <= 1) return
+    const next = new Image()
+    next.src = images[(currentIndex + 1) % images.length]
+    const prev = new Image()
+    prev.src = images[(currentIndex - 1 + images.length) % images.length]
+  }, [currentIndex, images])
 
   const features = []
   if (accommodation?.pool) features.push({ icon: '🏊', label: 'Piscina' })
@@ -121,8 +140,7 @@ export default function AccommodationViewPage() {
     )
   }
 
-  const showingImage = images[Math.min(activeImage, images.length - 1)]
-  const currentIndex = images.length ? Math.min(activeImage, images.length - 1) : 0
+  const showingImage = images[currentIndex]
   const showGalleryNav = images.length > 1
 
   const goPrev = () => {
@@ -179,7 +197,7 @@ export default function AccommodationViewPage() {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <img
+            <img onError={onImgError}
               src={showingImage}
               alt={`Foto ${currentIndex + 1} de ${accommodation.name}`}
               className="view-cover-img"
@@ -219,12 +237,12 @@ export default function AccommodationViewPage() {
                 <button
                   key={i}
                   type="button"
-                  className={`view-thumb ${i === Math.min(activeImage, images.length - 1) ? 'active' : ''}`}
+                  className={`view-thumb ${i === currentIndex ? 'active' : ''}`}
                   onClick={() => setActiveImage(i)}
                   aria-label={`Imagen ${i + 1}`}
-                  aria-current={i === Math.min(activeImage, images.length - 1)}
+                  aria-current={i === currentIndex}
                 >
-                  <img src={img} alt="" loading="lazy" />
+                  <img onError={onImgError} src={img} alt="" loading="lazy" />
                 </button>
               ))}
             </div>
@@ -323,6 +341,17 @@ export default function AccommodationViewPage() {
               Esta decisión la ven todos los familiares en tiempo real.
             </p>
           </div>
+
+          {(accommodation.createdAt || accommodation.updatedAt) && (
+            <div className="view-dates">
+              {accommodation.createdAt && (
+                <span>🗓 Cargado el {formatDate(accommodation.createdAt)}</span>
+              )}
+              {accommodation.updatedAt && (
+                <span>✏️ Actualizado el {formatDate(accommodation.updatedAt, 'short')}</span>
+              )}
+            </div>
+          )}
         </aside>
       </section>
 

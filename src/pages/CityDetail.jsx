@@ -16,7 +16,9 @@ import {
   sortAccommodations,
 } from '../utils/filterAccommodations'
 import StatusTabs from '../components/StatusTabs'
+import ListSkeleton from '../components/ListSkeleton'
 import '../styles/lists.css'
+import { onImgError } from '../utils/images'
 
 export default function CityDetail() {
   const { id } = useParams()
@@ -77,7 +79,7 @@ export default function CityDetail() {
     return (
       <div className="list-page">
         <div className="list-header"><h1>Cargando ciudad…</h1></div>
-        <div className="list-empty">Un momento.</div>
+        <ListSkeleton cards={6} />
       </div>
     )
   }
@@ -114,7 +116,7 @@ export default function CityDetail() {
           <Link to="/ciudades" className="back-link">← Volver a ciudades</Link>
         </div>
         <div className="detail-cover">
-          <img
+          <img onError={onImgError}
             src={city.coverImage || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1200&auto=format&fit=crop'}
             alt=""
             className="detail-cover-img"

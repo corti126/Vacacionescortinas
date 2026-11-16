@@ -7,6 +7,7 @@ import {
   observeAccommodations,
 } from '../services/firestore'
 import CityCard from '../components/CityCard'
+import ListSkeleton from '../components/ListSkeleton'
 import '../styles/lists.css'
 
 export default function CitiesList() {
@@ -41,7 +42,7 @@ export default function CitiesList() {
         <div className="list-header">
           <h1>Ciudades</h1>
         </div>
-        <div className="list-empty">Cargando…</div>
+        <ListSkeleton cards={6} />
       </div>
     )
   }

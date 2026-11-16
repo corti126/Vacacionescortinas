@@ -16,6 +16,7 @@ import {
   sortAccommodations,
 } from '../utils/filterAccommodations'
 import StatusTabs from '../components/StatusTabs'
+import ListSkeleton from '../components/ListSkeleton'
 import '../styles/lists.css'
 
 export default function AccommodationsList() {
@@ -82,7 +83,7 @@ export default function AccommodationsList() {
     return (
       <div className="list-page">
         <div className="list-header"><h1>Alojamientos</h1></div>
-        <div className="list-empty">Cargando…</div>
+        <ListSkeleton cards={8} />
       </div>
     )
   }

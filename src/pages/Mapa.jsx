@@ -6,6 +6,7 @@ import { divIcon } from 'leaflet'
 import { observeCities, observeAccommodations } from '../services/firestore'
 import 'leaflet/dist/leaflet.css'
 import '../styles/map.css'
+import { onImgError } from '../utils/images'
 
 const CENTRO_BRASIL = [-14.235, -51.925]
 
@@ -126,7 +127,7 @@ export default function Mapa() {
                   <div className="map-popup">
                     {city.coverImage && (
                       <Link to={`/ciudades/${city.id}`} className="map-popup-image-link">
-                        <img
+                        <img onError={onImgError}
                           src={city.coverImage}
                           alt=""
                           className="map-popup-image"

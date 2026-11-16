@@ -82,7 +82,56 @@
 .home-subtitle {
   font-size: 18px;
   color: var(--text-soft);
-  margin: 0 0 32px;
+  margin: 0 0 18px;
+}
+
+/* CTA principal del hero */
+.home-cta {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 28px;
+}
+
+.home-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 15.5px;
+  font-weight: 700;
+  padding: 13px 24px;
+  border-radius: 999px;
+  transition: transform 0.15s, box-shadow 0.2s, filter 0.2s, border-color 0.15s;
+}
+
+.home-cta-btn--primary {
+  color: #ffffff;
+  background: var(--grad-brand);
+  background-size: 160% 160%;
+  box-shadow: 0 10px 22px -12px color-mix(in srgb, var(--accent) 80%, transparent);
+  border: 1px solid transparent;
+}
+
+.home-cta-btn--primary:hover {
+  transform: translateY(-2px);
+  background-position: 100% 50%;
+  filter: brightness(1.06);
+}
+
+.home-cta-btn--ghost {
+  color: var(--text-h);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(4px);
+}
+
+.home-cta-btn--ghost:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  transform: translateY(-2px);
 }
 
 .home-stats {

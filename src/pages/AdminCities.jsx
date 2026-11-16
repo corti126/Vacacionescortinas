@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { deleteCity, observeAccommodations, observeCities } from '../services/firestore'
 import '../styles/admin.css'
+import ListSkeleton from '../components/ListSkeleton'
+import { onImgError } from '../utils/images'
 
 export default function AdminCities() {
   const navigate = useNavigate()
@@ -92,7 +94,7 @@ export default function AdminCities() {
         </div>
       )}
 
-      {loading && <div className="list-empty">Cargando ciudades…</div>}
+      {loading && <ListSkeleton cards={6} />}
 
       {!loading && !loadError && cities.length === 0 && (
         <div className="list-empty">
@@ -113,7 +115,7 @@ export default function AdminCities() {
             const count = countsByCity[city.id] || 0
             return (
               <li key={city.id} className="admin-acc-row">
-                <img
+                <img onError={onImgError}
                   className="admin-acc-thumb"
                   src={city.coverImage || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=400&auto=format&fit=crop'}
                   alt=""
