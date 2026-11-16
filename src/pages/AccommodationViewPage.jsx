@@ -2,7 +2,7 @@
    Diseño tipo "publicación": galería grande + panel resumen a la derecha;
    detalles debajo en tarjetas. Solo muestra el estado familiar que la
    familia comparte: editar/eliminar vive en el panel de administración. */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   getAccommodation,
@@ -25,6 +25,7 @@ export default function AccommodationViewPage() {
   const [loading, setLoading] = useState(true)
   const [activeImage, setActiveImage] = useState(0)
   const [loadError, setLoadError] = useState(null)
+  const touchStartX = useRef(null)
   const { selected, toggle, isSelected, canAdd, max } = useComparator()
 
   useEffect(() => {
@@ -121,6 +122,40 @@ export default function AccommodationViewPage() {
   }
 
   const showingImage = images[Math.min(activeImage, images.length - 1)]
+  const currentIndex = images.length ? Math.min(activeImage, images.length - 1) : 0
+  const showGalleryNav = images.length > 1
+
+  const goPrev = () => {
+    if (!showGalleryNav) return
+    setActiveImage((i) => (Math.min(i, images.length - 1) - 1 + images.length) % images.length)
+  }
+  const goNext = () => {
+    if (!showGalleryNav) return
+    setActiveImage((i) => (i + 1) % images.length)
+  }
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches?.[0]?.clientX ?? null
+  }
+  const handleTouchEnd = (e) => {
+    const start = touchStartX.current
+    touchStartX.current = null
+    if (start == null || !showGalleryNav) return
+    const end = e.changedTouches?.[0]?.clientX
+    if (end == null) return
+    const dx = end - start
+    if (dx <= -40) goNext()
+    else if (dx >= 40) goPrev()
+  }
+  const handleGalleryKey = (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      goPrev()
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      goNext()
+    }
+  }
 
   return (
     <div className="view-page">
@@ -135,11 +170,46 @@ export default function AccommodationViewPage() {
       {/* Hero: galería + resumen */}
       <section className="view-hero">
         <div className="view-gallery">
-          <div className="view-cover">
-            <img src={showingImage} alt="" className="view-cover-img" />
-            {images.length > 1 && (
+          <div
+            className="view-cover"
+            tabIndex={showGalleryNav ? 0 : -1}
+            role={showGalleryNav ? 'group' : undefined}
+            aria-label={showGalleryNav ? 'Galería de fotos (usá las flechas del teclado o deslizá)' : undefined}
+            onKeyDown={handleGalleryKey}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <img
+              src={showingImage}
+              alt={`Foto ${currentIndex + 1} de ${accommodation.name}`}
+              className="view-cover-img"
+              draggable={false}
+            />
+            {showGalleryNav && (
+              <>
+                <button
+                  type="button"
+                  className="view-nav-btn view-nav-btn--prev"
+                  onClick={goPrev}
+                  aria-label="Imagen anterior"
+                  title="Imagen anterior"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  className="view-nav-btn view-nav-btn--next"
+                  onClick={goNext}
+                  aria-label="Imagen siguiente"
+                  title="Imagen siguiente"
+                >
+                  ›
+                </button>
+              </>
+            )}
+            {showGalleryNav && (
               <span className="view-cover-counter">
-                {Math.min(activeImage, images.length - 1) + 1} / {images.length}
+                {currentIndex + 1} / {images.length}
               </span>
             )}
           </div>
