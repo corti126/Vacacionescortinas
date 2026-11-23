@@ -50,18 +50,6 @@ export default function FiltersPanel({
       label: `Precio ≤ $${filters.maxPrice}`,
       clear: () => set({ maxPrice: '' }),
     })
-  if (filters.maxDistance)
-    chips.push({
-      key: 'maxDistance',
-      label: `Playa ≤ ${filters.maxDistance} m`,
-      clear: () => set({ maxDistance: '' }),
-    })
-  if (filters.minCapacity)
-    chips.push({
-      key: 'minCapacity',
-      label: `Huéspedes ≥ ${filters.minCapacity}`,
-      clear: () => set({ minCapacity: '' }),
-    })
   if (filters.minBedrooms)
     chips.push({
       key: 'minBedrooms',
@@ -174,36 +162,6 @@ export default function FiltersPanel({
                 value={filters.maxPrice}
                 onChange={(e) => set({ maxPrice: e.target.value })}
                 placeholder="3000"
-              />
-            </div>
-          </div>
-
-          <div className="filter-field">
-            <label htmlFor="filter-distance">Distancia a la playa</label>
-            <div className="filter-input filter-input--suffix">
-              <span className="filter-input-affix">m máx.</span>
-              <input
-                id="filter-distance"
-                type="number"
-                min="0"
-                value={filters.maxDistance}
-                onChange={(e) => set({ maxDistance: e.target.value })}
-                placeholder="500"
-              />
-            </div>
-          </div>
-
-          <div className="filter-field">
-            <label htmlFor="filter-capacity">Capacidad mínima</label>
-            <div className="filter-input filter-input--suffix">
-              <span className="filter-input-affix">pers.</span>
-              <input
-                id="filter-capacity"
-                type="number"
-                min="1"
-                value={filters.minCapacity}
-                onChange={(e) => set({ minCapacity: e.target.value })}
-                placeholder="4"
               />
             </div>
           </div>

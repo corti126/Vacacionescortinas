@@ -261,11 +261,43 @@
 
 .cmp-picker-head strong { color: var(--accent); }
 
+.cmp-picker-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1 1 300px;
+  max-width: 560px;
+}
+
+.cmp-picker-city {
+  padding: 10px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-h);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cmp-picker-city:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+
+.cmp-picker-city:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
 .cmp-picker-search-wrap {
   position: relative;
-  min-width: 240px;
-  flex: 1 1 260px;
-  max-width: 360px;
+  min-width: 220px;
+  flex: 1 1 240px;
+  max-width: 340px;
 }
 
 .cmp-picker-search-icon {
@@ -414,6 +446,8 @@
 @media (max-width: 640px) {
   .cmp-picker { padding: 14px; }
   .cmp-picker-head { flex-direction: column; align-items: stretch; }
+  .cmp-picker-tools { max-width: none; width: 100%; justify-content: stretch; }
+  .cmp-picker-city { width: 100%; }
   .cmp-picker-search-wrap { max-width: none; }
   .cmp-picker-grid { grid-template-columns: 1fr; }
   .cmp-pick-card {

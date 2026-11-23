@@ -77,7 +77,11 @@ export default function StatusTabs({
               return (
                 <div
                   key={a.id}
-                  className="status-tab-card status-tab-card--interactive"
+                  className={`status-tab-card status-tab-card--interactive ${
+                    status === ACCOMMODATION_STATUS.DISCARDED
+                      ? 'status-tab-card--discarded'
+                      : ''
+                  }`}
                   role="link"
                   tabIndex={0}
                   aria-label={`Ver alojamiento: ${a.name}`}

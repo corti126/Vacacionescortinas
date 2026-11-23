@@ -43,6 +43,7 @@ export default function Comparator() {
   const [accommodations, setAccommodations] = useState([])
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
+  const [cityFilter, setCityFilter] = useState('')
 
   useEffect(() => {
     let ready = 0
@@ -80,9 +81,10 @@ export default function Comparator() {
 
   const pickerList = useMemo(() => {
     const q = query.trim().toLowerCase()
-    const list = [...accommodations].sort(
+    let list = [...accommodations].sort(
       (a, b) => Number(b.myRating || 0) - Number(a.myRating || 0),
     )
+    if (cityFilter) list = list.filter((a) => a.cityId === cityFilter)
     if (!q) return list
     return list.filter((a) => {
       const city = citiesById[a.cityId]
@@ -92,7 +94,7 @@ export default function Comparator() {
         city?.name?.toLowerCase().includes(q)
       )
     })
-  }, [accommodations, citiesById, query])
+  }, [accommodations, citiesById, query, cityFilter])
 
   return (
     <div className="cmp-page">
@@ -188,16 +190,29 @@ export default function Comparator() {
                 <strong>+ Agregar</strong> en cualquiera de estas tarjetas.
               </p>
             </div>
-            <div className="cmp-picker-search-wrap">
-              <span className="cmp-picker-search-icon" aria-hidden="true">🔍</span>
-              <input
-                type="search"
-                className="cmp-picker-search"
-                placeholder="Buscar por nombre, barrio o ciudad…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                aria-label="Buscar alojamiento"
-              />
+            <div className="cmp-picker-tools">
+              <select
+                className="cmp-picker-city"
+                value={cityFilter}
+                onChange={(e) => setCityFilter(e.target.value)}
+                aria-label="Filtrar por ciudad"
+              >
+                <option value="">Todas las ciudades</option>
+                {cities.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              <div className="cmp-picker-search-wrap">
+                <span className="cmp-picker-search-icon" aria-hidden="true">🔍</span>
+                <input
+                  type="search"
+                  className="cmp-picker-search"
+                  placeholder="Buscar por nombre, barrio o ciudad…"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  aria-label="Buscar alojamiento"
+                />
+              </div>
             </div>
           </div>
 
