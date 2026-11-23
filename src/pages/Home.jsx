@@ -59,12 +59,6 @@ export default function Home() {
     countsByCity[a.cityId] = (countsByCity[a.cityId] || 0) + 1
   }
 
-  const quickAccess = [
-    { to: '/ciudades', label: 'Todos los destinos', count: cities.length },
-    { to: '/alojamientos', label: 'Todos los alojamientos', count: accommodations.length },
-    { to: '/mapa', label: 'Mapa de Brasil', count: null },
-  ]
-
   return (
     <div className="home">
       <header className="home-hero">
@@ -112,26 +106,6 @@ export default function Home() {
           </div>
         </div>
       </header>
-
-      <section className="home-quick-access">
-        <div className="container">
-          <h2>Accesos rápidos</h2>
-          <div className="quick-grid">
-            {quickAccess.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="quick-card"
-              >
-                <span className="quick-label">{item.label}</span>
-                {item.count !== null && (
-                  <span className="quick-count">{item.count}</span>
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="home-cities">
         <div className="container">

@@ -106,7 +106,7 @@ export default function Mapa() {
       <div className="map-header">
         <h1>Mapa de Brasil</h1>
         <p className="map-subtitle">
-          Ciudades registradas. ✈️ marca el aeropuerto de Recife (la llegada del viaje); tocá un pino para ver detalles.
+          Ciudades registradas. El ✈️ de Recife marca el aeropuerto de llegada; tocá un marcador para ver detalles.
         </p>
       </div>
 

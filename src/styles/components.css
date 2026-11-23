@@ -548,8 +548,8 @@
 
 /* Cada pestaña con su propio color al activarse */
 .status-tab--all.active { background: var(--grad-brand); }
-.status-tab--pending.active { background: linear-gradient(135deg, var(--status-pending), #ef4444); }
-.status-tab--favorite.active { background: linear-gradient(135deg, var(--status-pending), var(--status-favorite)); }
+.status-tab--pending.active { background: linear-gradient(135deg, var(--status-pending), #f97316); }
+.status-tab--favorite.active { background: linear-gradient(135deg, var(--status-favorite), #ff8fa3); }
 .status-tab--discarded.active { background: linear-gradient(135deg, #475569, var(--status-discarded)); }
 
 .status-tab--pending .status-tab-icon { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15)); }
