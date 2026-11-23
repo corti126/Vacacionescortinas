@@ -1,5 +1,8 @@
 /* Panel de filtros combinables, ordenamiento, chips removibles y
-   calendario de disponibilidad (requisito 11 + filtro de fechas) */
+   calendario de disponibilidad (requisito 11 + filtro de fechas).
+   El panel es colapsable: por defecto queda cerrado para no ocupar
+   pantalla; la cabecera siempre visible con orden, limpieza y chips. */
+import { useState } from 'react'
 import {
   SORT_OPTIONS,
   STATUS_OPTIONS,
@@ -16,6 +19,7 @@ export default function FiltersPanel({
   cities = [],
   onClear,
 }) {
+  const [open, setOpen] = useState(false)
   const set = (patch) => onChangeFilters({ ...filters, ...patch })
 
   const sortLabel =
@@ -116,6 +120,14 @@ export default function FiltersPanel({
                 ✕ Limpiar filtros
               </button>
             )}
+            <button
+              type="button"
+              className="filters-toggle"
+              onClick={() => setOpen((o) => !o)}
+              aria-expanded={open}
+            >
+              {open ? '▲ Ocultar filtros' : '▼ Mostrar filtros'}
+            </button>
           </div>
         </div>
 
@@ -136,128 +148,113 @@ export default function FiltersPanel({
           </div>
         )}
 
-        <div className="filters-grid">
-          <div className="filter-field">
-            <label htmlFor="filter-city">Ciudad</label>
-            <select
-              id="filter-city"
-              value={filters.cityId}
-              onChange={(e) => set({ cityId: e.target.value })}
-            >
-              <option value="">Todas las ciudades</option>
-              {cities.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
+        {open && (
+          <>
+            <div className="filters-grid">
+              <div className="filter-field">
+                <label htmlFor="filter-city">Ciudad</label>
+                <select
+                  id="filter-city"
+                  value={filters.cityId}
+                  onChange={(e) => set({ cityId: e.target.value })}
+                >
+                  <option value="">Todas las ciudades</option>
+                  {cities.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="filter-field">
-            <label htmlFor="filter-price">Precio máximo</label>
-            <div className="filter-input filter-input--prefix">
-              <span className="filter-input-affix">$</span>
-              <input
-                id="filter-price"
-                type="number"
-                min="0"
-                value={filters.maxPrice}
-                onChange={(e) => set({ maxPrice: e.target.value })}
-                placeholder="3000"
-              />
-            </div>
-          </div>
+              <div className="filter-field">
+                <label htmlFor="filter-price">Precio máximo</label>
+                <div className="filter-input filter-input--prefix">
+                  <span className="filter-input-affix">$</span>
+                  <input
+                    id="filter-price"
+                    type="number"
+                    min="0"
+                    value={filters.maxPrice}
+                    onChange={(e) => set({ maxPrice: e.target.value })}
+                    placeholder="3000"
+                  />
+                </div>
+              </div>
 
-          <div className="filter-field">
-            <label htmlFor="filter-bedrooms">Habitaciones mínimas</label>
-            <input
-              id="filter-bedrooms"
-              type="number"
-              min="0"
-              value={filters.minBedrooms}
-              onChange={(e) => set({ minBedrooms: e.target.value })}
-              placeholder="2"
-            />
-          </div>
+              <div className="filter-field">
+                <label htmlFor="filter-bedrooms">Habitaciones mínimas</label>
+                <input
+                  id="filter-bedrooms"
+                  type="number"
+                  min="0"
+                  value={filters.minBedrooms}
+                  onChange={(e) => set({ minBedrooms: e.target.value })}
+                  placeholder="2"
+                />
+              </div>
 
-          <div className="filter-field">
-            <label htmlFor="filter-rating">Mi puntuación mínima</label>
-            <div className="filter-input filter-input--suffix">
-              <span className="filter-input-affix">/10</span>
-              <input
-                id="filter-rating"
-                type="number"
-                min="1"
-                max="10"
-                value={filters.minRating}
-                onChange={(e) => set({ minRating: e.target.value })}
-                placeholder="7"
-              />
-            </div>
-          </div>
+              <div className="filter-field">
+                <label htmlFor="filter-rating">Mi puntuación mínima</label>
+                <div className="filter-input filter-input--suffix">
+                  <span className="filter-input-affix">/10</span>
+                  <input
+                    id="filter-rating"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={filters.minRating}
+                    onChange={(e) => set({ minRating: e.target.value })}
+                    placeholder="7"
+                  />
+                </div>
+              </div>
 
-          <div className="filter-field">
-            <label htmlFor="filter-status">Estado familiar</label>
-            <select
-              id="filter-status"
-              value={filters.status}
-              onChange={(e) => set({ status: e.target.value })}
-            >
-              {STATUS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </div>
+              <div className="filter-field">
+                <label htmlFor="filter-status">Estado familiar</label>
+                <select
+                  id="filter-status"
+                  value={filters.status}
+                  onChange={(e) => set({ status: e.target.value })}
+                >
+                  {STATUS_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="filter-field">
-            <label>Características</label>
-            <div className="filter-toggles">
-              <button
-                type="button"
-                className={`filter-toggle ${filters.pool ? 'on' : ''}`}
-                aria-pressed={filters.pool}
-                onClick={() => set({ pool: !filters.pool })}
-              >
-                🏊 Piscina
-              </button>
-              <button
-                type="button"
-                className={`filter-toggle ${filters.garage ? 'on' : ''}`}
-                aria-pressed={filters.garage}
-                onClick={() => set({ garage: !filters.garage })}
-              >
-                🅿️ Cochera
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="filters-availability">
-          <div className="filters-availability-head">
-            <div className="filters-availability-text">
-              <span className="filters-availability-icon" aria-hidden="true">📅</span>
-              <div>
-                <h3>Disponibilidad</h3>
-                <p>
-                  Se muestran solo los alojamientos libres en <strong>todos</strong>{' '}
-                  los días que elijas.
-                </p>
+              <div className="filter-field">
+                <label>Características</label>
+                <div className="filter-toggles">
+                  <button
+                    type="button"
+                    className={`filter-toggle ${filters.pool ? 'on' : ''}`}
+                    aria-pressed={filters.pool}
+                    onClick={() => set({ pool: !filters.pool })}
+                  >
+                    🏊 Piscina
+                  </button>
+                  <button
+                    type="button"
+                    className={`filter-toggle ${filters.garage ? 'on' : ''}`}
+                    aria-pressed={filters.garage}
+                    onClick={() => set({ garage: !filters.garage })}
+                  >
+                    🅿️ Cochera
+                  </button>
+                </div>
               </div>
             </div>
-            {filters.availFrom && (
-              <button
-                type="button"
-                className="filters-clear"
-                onClick={() => set({ availFrom: '', availTo: '' })}
-              >
-                ✕ Limpiar fechas
-              </button>
-            )}
-          </div>
-          <DateRangeCalendar
-            from={filters.availFrom}
-            to={filters.availTo}
-            onChange={({ from, to }) => set({ availFrom: from, availTo: to })}
-          />
-        </div>
+
+            {/* Disponibilidad: solo el trigger del calendario (sin cabecera
+                pesada; se limpia desde el chip "Disponible") */}
+            <div className="filters-availability">
+              <DateRangeCalendar
+                from={filters.availFrom}
+                to={filters.availTo}
+                onChange={({ from, to }) => set({ availFrom: from, availTo: to })}
+              />
+            </div>
+          </>
+        )}
       </div>
     </section>
   )
